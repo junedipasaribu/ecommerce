@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Swal from "sweetalert2";
 import usersService from "../services/users";
 import { useNavigate } from "react-router-dom";
+import cacing from "../assets/images/cacing.png";
 
 const roles = [
   "superadmin",
@@ -127,6 +128,15 @@ export default function Register() {
 
             <p className="mt-4">powered by :</p>
             <h6>Underground Innovation Engineers.</h6>
+            <div className="mt-4">
+              <img
+                src={cacing}
+                alt="Logo"
+                width="110"
+                height="110"
+                style={{ filter: "brightness(0) invert(1)" }}
+              />
+            </div>
           </div>
 
           {/* RIGHT CARD */}
