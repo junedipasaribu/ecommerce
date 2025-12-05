@@ -1,0 +1,41 @@
+.card2-container {
+  width: 1200px;
+  height: 100px;
+  margin: 0 auto;
+}
+
+.check-left {
+  text-align: left;
+  color: #325a89;
+}
+
+.check-right {
+  text-align: right;
+  color: #325a89;
+  justify-items: right;
+}
+
+.check-mid {
+  text-align: center;
+  color: #325a89;
+}
+
+.check-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 30px;
+  margin: 0, auto;
+}
+
+.card,
+.card-body,
+.card-footer,
+.row,
+.col-md-6,
+.dropdown {
+  overflow: visible !important;
+}
+
+.dropdown-menu {
+  z-index: 99999 !important;
+}

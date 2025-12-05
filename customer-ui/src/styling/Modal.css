@@ -1,0 +1,24 @@
+.custom-modal {
+  position: absolute;
+  top: 35px;
+  right: 0;
+  width: 260px;
+  background: white;
+  border-radius: 5px;
+  z-index: 9999;
+  animation: fadeIn 0.25s ease-in-out;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  color: #325a89;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
