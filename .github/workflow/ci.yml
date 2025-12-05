@@ -1,0 +1,50 @@
+name: Ecommerce CI
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install Dependencies (admin-ui)
+        working-directory: ./admin-ui
+        run: npm install
+
+      - name: Build admin-ui
+        working-directory: ./admin-ui
+        run: npm run build
+
+      - name: Upload admin-ui Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: admin-ui-dist
+          path: admin-ui/dist
+
+
+      - name: Install Dependencies (customer-ui)
+        working-directory: ./customer-ui
+        run: npm install
+
+      - name: Build customer-ui
+        working-directory: ./customer-ui
+        run: npm run build
+
+      - name: Upload customer-ui Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: customer-ui-dist
+          path: customer-ui/dist
