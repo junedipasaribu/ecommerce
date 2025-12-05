@@ -50,3 +50,95 @@
 .checkout-item-btn:active {
   transform: scale(0.98);
 }
+
+/* Cart.css */
+.object-fit-cover {
+  object-fit: cover;
+}
+
+/* Responsive table */
+@media (max-width: 991.98px) {
+  .fixed-bottom {
+    z-index: 1030;
+  }
+
+  .sticky-lg-top {
+    position: static !important;
+  }
+}
+
+/* Animation for cart items */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card.mb-3 {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Custom scrollbar for table */
+.table-responsive::-webkit-scrollbar {
+  height: 6px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Hover effects */
+.btn-outline-secondary:hover {
+  border-color: #f6921e;
+  color: #f6921e;
+}
+
+/* Disabled button styling */
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .container-fluid {
+    padding-bottom: 80px; /* Space for fixed bottom button */
+  }
+
+  .card-body {
+    padding: 0.75rem !important;
+  }
+
+  h2.fw-bold {
+    font-size: 1.5rem;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.5rem !important;
+  }
+}
+
+/* Tablet optimizations */
+@media (max-width: 991.98px) and (min-width: 768px) {
+  .col-lg-8,
+  .col-lg-4 {
+    max-width: 100%;
+    flex: 0 0 100%;
+  }
+}
