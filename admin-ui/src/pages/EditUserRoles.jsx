@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Swal from "sweetalert2";
 import { usersData } from "../components/Sample";
 import modules from "../services/Permission";
+import RoleDefaults from "../services/RoleDefaults";
 
 const EditUserRoles = () => {
   const [selectedUserId, setSelectedUserId] = useState("");
@@ -78,6 +79,63 @@ const EditUserRoles = () => {
     }));
   };
 
+  // compute role defaults for selected role so we can show overrides
+  const roleDefaults = useMemo(() => {
+    if (!form.role) return {};
+    return RoleDefaults.getRolePermissions
+      ? RoleDefaults.getRolePermissions(form.role)
+      : {};
+  }, [form.role]);
+
+  const isOverridden = (moduleKey, action) => {
+    // explicit override only when form.permissions contains a defined value for that action
+    const formPerm = form.permissions?.[moduleKey]?.[action];
+    if (typeof formPerm === "undefined") return false;
+    const def = roleDefaults?.[moduleKey]?.[action];
+    return formPerm !== def;
+  };
+
+  // ================================
+  // APPLY ROLE DEFAULTS
+  // ================================
+  const handleApplyRoleDefaults = () => {
+    if (!form.role) {
+      Swal.fire("Pilih role", "Please select a role first", "warning");
+      return;
+    }
+
+    const defaults = RoleDefaults.getRolePermissions
+      ? RoleDefaults.getRolePermissions(form.role)
+      : {};
+    const hasExisting = Object.keys(form.permissions || {}).length > 0;
+    const different =
+      JSON.stringify(form.permissions || {}) !== JSON.stringify(defaults || {});
+
+    if (hasExisting && different) {
+      Swal.fire({
+        title: "Overwrite existing permissions?",
+        text: "Current permission edits will be replaced by the role defaults.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Overwrite",
+        cancelButtonText: "Cancel",
+      }).then((res) => {
+        if (res.isConfirmed) {
+          setForm((prev) => ({ ...prev, permissions: defaults }));
+          Swal.fire(
+            "Applied",
+            "Role defaults applied to permissions",
+            "success"
+          );
+        }
+      });
+      return;
+    }
+
+    setForm((prev) => ({ ...prev, permissions: defaults }));
+    Swal.fire("Applied", "Role defaults applied to permissions", "success");
+  };
+
   // ================================
   // SAVE
   // ================================
@@ -150,12 +208,11 @@ const EditUserRoles = () => {
                 value={form.role}
                 onChange={(e) => setForm({ ...form, role: e.target.value })}
               >
-                <option value="superadmin">Super Admin</option>
-                <option value="admin">Admin</option>
-                <option value="seller_owner">Seller Owner</option>
-                <option value="seller_admin">Seller Admin</option>
-                <option value="seller_staff">Seller Staff</option>
-                <option value="seller_inventory">Seller Inventory</option>
+                {RoleDefaults.listRoles().map((r) => (
+                  <option key={r.key} value={r.key}>
+                    {r.name}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -171,6 +228,14 @@ const EditUserRoles = () => {
               onClick={() => handleSelectAllGlobal(false)}
             >
               Unselect All
+            </button>
+
+            <button
+              className="btn btn-sm btn-outline-primary mb-3 ms-2"
+              onClick={handleApplyRoleDefaults}
+              title="Populate permissions from the selected role"
+            >
+              Apply Role Defaults
             </button>
 
             {/* PERMISSIONS TABLE */}
@@ -194,11 +259,25 @@ const EditUserRoles = () => {
 
                       {["create", "read", "update", "delete"].map((act) => (
                         <td key={act} className="text-center">
-                          <input
-                            type="checkbox"
-                            checked={form.permissions?.[m.key]?.[act] || false}
-                            onChange={() => handlePermissionChange(m.key, act)}
-                          />
+                          <div className="d-flex align-items-center justify-content-center">
+                            <input
+                              type="checkbox"
+                              checked={
+                                form.permissions?.[m.key]?.[act] || false
+                              }
+                              onChange={() =>
+                                handlePermissionChange(m.key, act)
+                              }
+                            />
+                            {isOverridden(m.key, act) && (
+                              <span
+                                className="badge bg-info text-dark ms-2 small"
+                                title="Overridden (diff from role default)"
+                              >
+                                OVR
+                              </span>
+                            )}
+                          </div>
                         </td>
                       ))}
 

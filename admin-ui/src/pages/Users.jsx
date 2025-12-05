@@ -1,14 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import { usersData } from "../components/Sample";
+import usersService from "../services/users";
 import modules from "../services/Permission";
+import { useAuth } from "../context/AuthContext";
+import { canManageUsers } from "../utils/hasPermission";
 
 export default function Users() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const perPage = 10;
 
-  const [users, setUsers] = useState(usersData);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    let mounted = true;
+    usersService.getAll().then((list) => mounted && setUsers(list || []));
+    return () => (mounted = false);
+  }, []);
+
+  const { user: authUser } = useAuth();
+  const canManage = canManageUsers(authUser);
 
   const [showAdd, setShowAdd] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
@@ -128,7 +139,7 @@ export default function Users() {
     );
   });
 
-  const totalPages = Math.ceil(filtered.length / perPage);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
   const current = filtered.slice((page - 1) * perPage, page * perPage);
 
   // ADD USER
@@ -156,15 +167,17 @@ export default function Users() {
       );
     }
 
-    const newUser = {
-      ...form,
-      id: Date.now(),
-    };
+    if (!canManage)
+      return Swal.fire("Forbidden", "Anda tidak punya akses.", "warning");
 
-    setUsers((prev) => [...prev, newUser]);
-    setShowAdd(false);
-
-    Swal.fire("Success", "User berhasil ditambahkan!", "success");
+    try {
+      const created = await usersService.create({ ...form });
+      setUsers((prev) => [...prev, created]);
+      setShowAdd(false);
+      Swal.fire("Success", "User berhasil ditambahkan!", "success");
+    } catch (err) {
+      Swal.fire("Error", err.message || "Gagal menambahkan user", "error");
+    }
   };
 
   // EDIT USER
@@ -181,10 +194,17 @@ export default function Users() {
       return Swal.fire("Invalid Email", "Format email tidak valid", "warning");
     }
 
-    setUsers((prev) => prev.map((u) => (u.id === form.id ? form : u)));
-    setShowEdit(false);
+    if (!canManage)
+      return Swal.fire("Forbidden", "Anda tidak punya akses.", "warning");
 
-    Swal.fire("Updated", "User berhasil diperbarui", "success");
+    try {
+      const updated = await usersService.update(form);
+      setUsers((prev) => prev.map((u) => (u.id === updated.id ? updated : u)));
+      setShowEdit(false);
+      Swal.fire("Updated", "User berhasil diperbarui", "success");
+    } catch (err) {
+      Swal.fire("Error", err.message || "Gagal update user", "error");
+    }
   };
 
   // OPEN PERMISSION MODAL
@@ -207,10 +227,21 @@ export default function Users() {
   };
 
   const savePermissions = () => {
-    setUsers((prev) => prev.map((u) => (u.id === form.id ? form : u)));
-    setShowPerm(false);
+    if (!canManage)
+      return Swal.fire("Forbidden", "Anda tidak punya akses.", "warning");
 
-    Swal.fire("Success", "Permissions saved!", "success");
+    usersService
+      .update(form)
+      .then((updated) => {
+        setUsers((prev) =>
+          prev.map((u) => (u.id === updated.id ? updated : u))
+        );
+        setShowPerm(false);
+        Swal.fire("Success", "Permissions saved!", "success");
+      })
+      .catch((err) =>
+        Swal.fire("Error", err.message || "Gagal simpan permissions", "error")
+      );
   };
 
   // DELETE USER
@@ -225,8 +256,16 @@ export default function Users() {
     });
 
     if (confirm.isConfirmed) {
-      setUsers((prev) => prev.filter((u) => u.id !== id));
-      Swal.fire("Deleted", "User berhasil dihapus", "success");
+      if (!canManage)
+        return Swal.fire("Forbidden", "Anda tidak punya akses.", "warning");
+
+      try {
+        await usersService.remove(id);
+        setUsers((prev) => prev.filter((u) => u.id !== id));
+        Swal.fire("Deleted", "User berhasil dihapus", "success");
+      } catch (err) {
+        Swal.fire("Error", err.message || "Gagal hapus user", "error");
+      }
     }
   };
 
@@ -296,6 +335,7 @@ export default function Users() {
                     <button
                       className="btn btn-sm btn-outline-secondary me-2"
                       onClick={() => openEditModal(user)}
+                      disabled={!canManage}
                     >
                       <i className="bi bi-pencil" /> Edit
                     </button>
@@ -303,6 +343,7 @@ export default function Users() {
                     <button
                       className="btn btn-sm btn-outline-primary me-2"
                       onClick={() => openPermModal(user)}
+                      disabled={!canManage}
                     >
                       <i className="bi bi-shield-lock" /> Permissions
                     </button>
@@ -310,6 +351,7 @@ export default function Users() {
                     <button
                       className="btn btn-sm btn-outline-danger"
                       onClick={() => deleteUser(user.id)}
+                      disabled={!canManage}
                     >
                       <i className="bi bi-trash" /> Delete
                     </button>
@@ -434,7 +476,9 @@ export default function Users() {
                 >
                   Cancel
                 </button>
-                <button className="btn btn-primary">Create</button>
+                <button className="btn btn-primary" disabled={!canManage}>
+                  Create
+                </button>
               </div>
             </form>
           </div>
@@ -497,7 +541,11 @@ export default function Users() {
                 >
                   Cancel
                 </button>
-                <button className="btn btn-success" onClick={savePermissions}>
+                <button
+                  className="btn btn-success"
+                  onClick={savePermissions}
+                  disabled={!canManage}
+                >
                   Save Permissions
                 </button>
               </div>
@@ -563,7 +611,9 @@ export default function Users() {
                 >
                   Cancel
                 </button>
-                <button className="btn btn-success">Save Change</button>
+                <button className="btn btn-success" disabled={!canManage}>
+                  Save Change
+                </button>
               </div>
             </form>
           </div>

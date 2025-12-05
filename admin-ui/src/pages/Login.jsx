@@ -1,9 +1,57 @@
-import React from "react";
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import cacing from "../assets/images/c.png";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate, useLocation } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await login(email, password);
+      // Role-based landing: send users to a page based on their role
+      // Default to dashboard `/` for admins / superadmin
+      const roleLanding = (userRole) => {
+        switch (userRole) {
+          case "seller_owner":
+          case "seller_admin":
+          case "seller_staff":
+            return "/orders";
+          case "seller_inventory":
+            return "/products";
+          case "admin":
+          case "superadmin":
+          default:
+            return "/";
+        }
+      };
+
+      // try to find logged-in user from localStorage (AuthContext sets it there)
+      let landed = "/";
+      try {
+        const raw = localStorage.getItem("auth");
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          const role = parsed?.user?.role;
+          landed = roleLanding(role);
+        }
+      } catch (e) {
+        landed = "/";
+      }
+
+      navigate(landed, { replace: true });
+    } catch (err) {
+      Swal.fire("Login Failed", err.message || "Invalid credentials", "error");
+    }
+  };
+
   return (
     <div
       className="d-flex flex-column justify-content-between"
@@ -44,35 +92,75 @@ export default function Login() {
                 Login
               </h5>
 
-              {/* Username */}
-              <input
-                type="text"
-                className="form-control mb-3"
-                placeholder="Username"
-              />
+              <form onSubmit={handleSubmit}>
+                {/* Email */}
 
-              {/* Password */}
-              <input
-                type="password"
-                className="form-control mb-2"
-                placeholder="Password"
-              />
+                <div className="position-relative mb-3">
+                  <input
+                    type="text"
+                    className="form-control pe-5"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
 
-              <small style={{ color: "#153B77", cursor: "pointer" }}>
-                Lupa Password?
-              </small>
+                  <i
+                    className="bi bi-envelope email-icon"
+                    style={{
+                      position: "absolute",
+                      right: "12px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      fontSize: "18px",
+                      color: "#6c757d",
+                      pointerEvents: "none",
+                    }}
+                  ></i>
+                </div>
 
-              <button
-                className="btn w-100 mt-3 text-white fw-bold"
-                style={{ backgroundColor: "#E39A3B" }}
-              >
-                Log In
-              </button>
+                {/* Password */}
+                <div className="position-relative mb-3">
+                  <input
+                    type="password"
+                    className="form-control mb-2"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <i
+                    className="bi bi-person person-icon"
+                    style={{
+                      position: "absolute",
+                      right: "12px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      fontSize: "18px",
+                      color: "#6c757d",
+                      pointerEvents: "none",
+                    }}
+                  ></i>
+                </div>
+                <small style={{ color: "#153B77", cursor: "pointer" }}>
+                  Lupa Password?
+                </small>
 
-              <div className="text-center mt-2">
+                <button
+                  type="submit"
+                  className="btn w-100 mt-3 text-white fw-bold"
+                  style={{ backgroundColor: "#E39A3B" }}
+                >
+                  Log In
+                </button>
+              </form>
+
+              <div className="text-center mt-3">
                 <small className="text-muted">Not registered? </small>
                 <a
                   href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("/register");
+                  }}
                   className="text-decoration-none"
                   style={{ color: "#153B77" }}
                 >

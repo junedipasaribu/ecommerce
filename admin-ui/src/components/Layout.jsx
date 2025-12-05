@@ -1,5 +1,61 @@
 import React, { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
 import { Link, Outlet, useLocation } from "react-router-dom";
+import { hasPerm } from "../utils/hasPermission";
+
+const UserGreeting = () => {
+  const { user, logout } = useAuth();
+
+  const name = user?.name || "Admin";
+  const avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}`;
+
+  return (
+    <>
+      <h6 className="m-0 me-3 text-muted">Welcome, {name}</h6>
+
+      <div className="dropdown">
+        <a
+          href="#"
+          className="d-flex align-items-center text-dark text-decoration-none dropdown-toggle"
+          id="topUserDropdown"
+          data-bs-toggle="dropdown"
+        >
+          <img
+            src={avatar}
+            alt="avatar"
+            width="36"
+            height="36"
+            className="rounded-circle me-2"
+          />
+        </a>
+
+        <ul className="dropdown-menu dropdown-menu-end shadow">
+          <li>
+            <a className="dropdown-item" href="#">
+              <i className="bi bi-person me-2"></i> Profile
+            </a>
+          </li>
+          <li>
+            <a className="dropdown-item" href="#">
+              <i className="bi bi-gear me-2"></i> Settings
+            </a>
+          </li>
+          <li>
+            <hr className="dropdown-divider" />
+          </li>
+          <li>
+            <button
+              className="dropdown-item text-danger"
+              onClick={() => logout()}
+            >
+              <i className="bi bi-box-arrow-right me-2"></i> Logout
+            </button>
+          </li>
+        </ul>
+      </div>
+    </>
+  );
+};
 
 const Layout = () => {
   const [open, setOpen] = useState(true);
@@ -42,51 +98,95 @@ const Layout = () => {
         {/* MENU */}
         <ul className="list-unstyled mt-3 px-2">
           <li className="mb-2">
-            <Link
-              to="/"
-              className="d-flex align-items-center p-2 rounded text-decoration-none"
-              style={{ color: "#374151" }}
-            >
-              <i className="bi bi-grid fs-5"></i>
-              <span
-                className="ms-3"
-                style={{ display: open ? "block" : "none" }}
-              >
-                Dashboard
-              </span>
-            </Link>
+            {(() => {
+              const { user } = useAuth();
+              const canRead = hasPerm(user, "dashboard", "read");
+              return (
+                <Link
+                  to="/"
+                  onClick={(e) => !canRead && e.preventDefault()}
+                  className="d-flex align-items-center p-2 rounded text-decoration-none"
+                  style={{ color: "#374151", opacity: canRead ? 1 : 0.65 }}
+                >
+                  <i className="bi bi-grid fs-5"></i>
+                  <span
+                    className="ms-3"
+                    style={{ display: open ? "block" : "none" }}
+                  >
+                    Dashboard
+                  </span>
+                </Link>
+              );
+            })()}
           </li>
 
           <li className="mb-2">
-            <Link
-              to="/products"
-              className="d-flex align-items-center p-2 rounded text-decoration-none"
-              style={{ color: "#374151" }}
-            >
-              <i className="bi bi-box-seam fs-5"></i>
-              <span
-                className="ms-3"
-                style={{ display: open ? "block" : "none" }}
-              >
-                Products
-              </span>
-            </Link>
+            {(() => {
+              const { user } = useAuth();
+              const canRead = hasPerm(user, "product", "read");
+              return (
+                <Link
+                  to="/products"
+                  onClick={(e) => !canRead && e.preventDefault()}
+                  className="d-flex align-items-center p-2 rounded text-decoration-none"
+                  style={{ color: "#374151", opacity: canRead ? 1 : 0.65 }}
+                >
+                  <i className="bi bi-box-seam fs-5"></i>
+                  <span
+                    className="ms-3"
+                    style={{ display: open ? "block" : "none" }}
+                  >
+                    Products
+                  </span>
+                </Link>
+              );
+            })()}
           </li>
 
           <li className="mb-2">
-            <Link
-              to="/orders"
-              className="d-flex align-items-center p-2 rounded text-decoration-none"
-              style={{ color: "#374151" }}
-            >
-              <i className="bi bi-cart-check fs-5"></i>
-              <span
-                className="ms-3"
-                style={{ display: open ? "block" : "none" }}
-              >
-                Orders
-              </span>
-            </Link>
+            {(() => {
+              const { user } = useAuth();
+              const canRead = hasPerm(user, "order", "read");
+              return (
+                <Link
+                  to="/orders"
+                  onClick={(e) => !canRead && e.preventDefault()}
+                  className="d-flex align-items-center p-2 rounded text-decoration-none"
+                  style={{ color: "#374151", opacity: canRead ? 1 : 0.65 }}
+                >
+                  <i className="bi bi-cart-check fs-5"></i>
+                  <span
+                    className="ms-3"
+                    style={{ display: open ? "block" : "none" }}
+                  >
+                    Orders
+                  </span>
+                </Link>
+              );
+            })()}
+          </li>
+
+          <li className="mb-2">
+            {(() => {
+              const { user } = useAuth();
+              const canRead = hasPerm(user, "report", "read");
+              return (
+                <Link
+                  to="/reports"
+                  onClick={(e) => !canRead && e.preventDefault()}
+                  className="d-flex align-items-center p-2 rounded text-decoration-none"
+                  style={{ color: "#374151", opacity: canRead ? 1 : 0.65 }}
+                >
+                  <i className="bi bi-bar-chart fs-5"></i>
+                  <span
+                    className="ms-3"
+                    style={{ display: open ? "block" : "none" }}
+                  >
+                    Reports
+                  </span>
+                </Link>
+              );
+            })()}
           </li>
 
           <li className="mb-2">
@@ -187,45 +287,7 @@ const Layout = () => {
 
           {/* Right user section */}
           <div className="d-flex align-items-center">
-            <h6 className="m-0 me-3 text-muted">Welcome, Admin</h6>
-
-            <div className="dropdown">
-              <a
-                href="#"
-                className="d-flex align-items-center text-dark text-decoration-none dropdown-toggle"
-                id="topUserDropdown"
-                data-bs-toggle="dropdown"
-              >
-                <img
-                  src="https://ui-avatars.com/api/?name=Admin"
-                  alt="avatar"
-                  width="36"
-                  height="36"
-                  className="rounded-circle me-2"
-                />
-              </a>
-
-              <ul className="dropdown-menu dropdown-menu-end shadow">
-                <li>
-                  <a className="dropdown-item" href="#">
-                    <i className="bi bi-person me-2"></i> Profile
-                  </a>
-                </li>
-                <li>
-                  <a className="dropdown-item" href="#">
-                    <i className="bi bi-gear me-2"></i> Settings
-                  </a>
-                </li>
-                <li>
-                  <hr className="dropdown-divider" />
-                </li>
-                <li>
-                  <a className="dropdown-item text-danger" href="#">
-                    <i className="bi bi-box-arrow-right me-2"></i> Logout
-                  </a>
-                </li>
-              </ul>
-            </div>
+            <UserGreeting />
           </div>
         </nav>
 

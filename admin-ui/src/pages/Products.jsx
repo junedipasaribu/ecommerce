@@ -1,13 +1,53 @@
 // src/pages/Products.jsx
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Swal from "sweetalert2";
-import { productsData as InitialProducts } from "../components/Sample";
+import productsService from "../services/products";
+import { useAuth } from "../context/AuthContext";
+import { hasPerm } from "../utils/hasPermission";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 export default function Products() {
-  // ambil data dari data.js
-  const [products, setProducts] = useState(InitialProducts);
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    let mounted = true;
+    productsService.getAll().then((list) => {
+      if (mounted) setProducts(list || []);
+    });
+    return () => (mounted = false);
+  }, []);
+
+  const { user: authUser } = useAuth();
+  const canCreate = hasPerm(authUser, "product", "create");
+  const canUpdate = hasPerm(authUser, "product", "update");
+  const canDelete = hasPerm(authUser, "product", "delete");
+
+  // Promo helpers
+  const isPromoActive = (promo) => {
+    try {
+      if (!promo || !promo.enabled) return false;
+      if (!promo.startDate || !promo.endDate) return false;
+      const now = new Date();
+      const start = new Date(promo.startDate + "T00:00:00");
+      const end = new Date(promo.endDate + "T23:59:59");
+      return now >= start && now <= end;
+    } catch (e) {
+      return false;
+    }
+  };
+
+  const getPromoPrice = (product) => {
+    const promo = product?.promo;
+    if (!promo || !isPromoActive(promo)) return product.price;
+    const value = Number(promo.value || 0);
+    if (promo.type === "percent") {
+      const discounted = Math.round(product.price * (1 - value / 100));
+      return Math.max(0, discounted);
+    }
+    // fixed
+    return Math.max(0, product.price - value);
+  };
 
   // search & pagination
   const [q, setQ] = useState("");
@@ -44,8 +84,15 @@ export default function Products() {
       confirmButtonText: "Yes, delete",
     }).then((res) => {
       if (res.isConfirmed) {
-        setProducts((prev) => prev.filter((p) => p.id !== id));
-        Swal.fire("Deleted", "Product removed", "success");
+        productsService
+          .remove(id)
+          .then(() => {
+            setProducts((prev) => prev.filter((p) => p.id !== id));
+            Swal.fire("Deleted", "Product removed", "success");
+          })
+          .catch((err) =>
+            Swal.fire("Error", err.message || "Failed to delete", "error")
+          );
       }
     });
   };
@@ -59,10 +106,46 @@ export default function Products() {
       Swal.fire("Validation", "Name is required", "warning");
       return;
     }
-
-    setProducts((prev) => prev.map((p) => (p.id === editing.id ? editing : p)));
-    setEditing(null);
-    Swal.fire("Saved", "Product updated", "success");
+    // promo validation
+    if (editing.promo?.enabled) {
+      const { startDate, endDate, type, value } = editing.promo;
+      if (!startDate || !endDate) {
+        Swal.fire(
+          "Validation",
+          "Promo start and end dates are required",
+          "warning"
+        );
+        return;
+      }
+      if (new Date(startDate) > new Date(endDate)) {
+        Swal.fire("Validation", "Promo start must be before end", "warning");
+        return;
+      }
+      if (!value || Number(value) <= 0) {
+        Swal.fire("Validation", "Promo value must be > 0", "warning");
+        return;
+      }
+      if (type === "percent" && (Number(value) <= 0 || Number(value) > 100)) {
+        Swal.fire(
+          "Validation",
+          "Percent promo must be between 1 and 100",
+          "warning"
+        );
+        return;
+      }
+    }
+    productsService
+      .update(editing)
+      .then((updated) => {
+        setProducts((prev) =>
+          prev.map((p) => (p.id === updated.id ? updated : p))
+        );
+        setEditing(null);
+        Swal.fire("Saved", "Product updated", "success");
+      })
+      .catch((err) =>
+        Swal.fire("Error", err.message || "Failed to update", "error")
+      );
   };
 
   // open add modal
@@ -83,13 +166,57 @@ export default function Products() {
       return;
     }
 
-    const id = products.length ? Math.max(...products.map((p) => p.id)) + 1 : 1;
+    // promo from form
+    const promoEnabled = !!f.promo_enabled?.checked;
+    let promo = undefined;
+    if (promoEnabled) {
+      const type = f.promo_type.value || "percent";
+      const value = Number(f.promo_value.value || 0);
+      const startDate = f.promo_start.value || "";
+      const endDate = f.promo_end.value || "";
+      if (!startDate || !endDate) {
+        Swal.fire(
+          "Validation",
+          "Promo start and end dates are required",
+          "warning"
+        );
+        return;
+      }
+      if (new Date(startDate) > new Date(endDate)) {
+        Swal.fire("Validation", "Promo start must be before end", "warning");
+        return;
+      }
+      if (!value || value <= 0) {
+        Swal.fire("Validation", "Promo value must be > 0", "warning");
+        return;
+      }
+      if (type === "percent" && (value <= 0 || value > 100)) {
+        Swal.fire(
+          "Validation",
+          "Percent promo must be between 1 and 100",
+          "warning"
+        );
+        return;
+      }
 
-    setProducts((prev) => [...prev, { id, name, price, stock, category }]);
+      promo = { enabled: true, type, value, startDate, endDate };
+    }
 
-    setShowAdd(false);
-    Swal.fire("Added", "Product created", "success");
-    f.reset();
+    const payload = promo
+      ? { name, price, stock, category, promo }
+      : { name, price, stock, category };
+
+    productsService
+      .create(payload)
+      .then((created) => {
+        setProducts((prev) => [...prev, created]);
+        setShowAdd(false);
+        Swal.fire("Added", "Product created", "success");
+        f.reset();
+      })
+      .catch((err) =>
+        Swal.fire("Error", err.message || "Failed to create", "error")
+      );
   };
 
   return (
@@ -113,6 +240,12 @@ export default function Products() {
           <button
             className="btn btn-primary btn-sm px-3 py-1 d-flex align-items-center"
             onClick={openAdd}
+            disabled={!canCreate}
+            title={
+              !canCreate
+                ? "You don't have permission to add products"
+                : undefined
+            }
           >
             <i className="bi bi-plus-lg me-1" />
             Add
@@ -151,19 +284,52 @@ export default function Products() {
                       <td className="text-nowrap">{p.name}</td>
                       <td className="text-nowrap">{p.category}</td>
                       <td className="text-nowrap">
-                        Rp {p.price.toLocaleString()}
+                        {isPromoActive(p.promo) ? (
+                          <div className="d-flex align-items-center">
+                            <div className="text-muted small text-decoration-line-through me-2">
+                              Rp {p.price.toLocaleString()}
+                            </div>
+                            <div className="fw-bold text-danger">
+                              Rp {getPromoPrice(p).toLocaleString()}
+                            </div>
+                            <span
+                              className="badge bg-warning text-dark ms-2"
+                              title={
+                                p.promo
+                                  ? `${p.promo.startDate} → ${p.promo.endDate}`
+                                  : "Promo"
+                              }
+                            >
+                              Promo
+                            </span>
+                          </div>
+                        ) : (
+                          <>Rp {p.price.toLocaleString()}</>
+                        )}
                       </td>
                       <td className="text-nowrap">{p.stock}</td>
                       <td>
                         <button
                           className="btn btn-sm btn-outline-secondary me-2"
                           onClick={() => openEdit(p)}
+                          disabled={!canUpdate}
+                          title={
+                            !canUpdate
+                              ? "You don't have permission to edit products"
+                              : undefined
+                          }
                         >
                           <i className="bi bi-pencil me-1" /> Edit
                         </button>
                         <button
                           className="btn btn-sm btn-outline-danger"
                           onClick={() => confirmDelete(p.id)}
+                          disabled={!canDelete}
+                          title={
+                            !canDelete
+                              ? "You don't have permission to delete products"
+                              : undefined
+                          }
                         >
                           <i className="bi bi-trash me-1" /> Delete
                         </button>
@@ -299,6 +465,104 @@ export default function Products() {
                     />
                   </div>
                 </div>
+
+                <div className="mt-3 border-top pt-3">
+                  <label className="form-label">Promotion (optional)</label>
+
+                  <div className="form-check form-switch mb-2">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      id="promoEnabled"
+                      checked={!!editing.promo?.enabled}
+                      onChange={(e) =>
+                        setEditing((s) => ({
+                          ...s,
+                          promo: {
+                            ...(s.promo || {}),
+                            enabled: e.target.checked,
+                          },
+                        }))
+                      }
+                    />
+                    <label className="form-check-label" htmlFor="promoEnabled">
+                      Enable promo
+                    </label>
+                  </div>
+
+                  <div className="row g-2">
+                    <div className="col-4">
+                      <label>Type</label>
+                      <select
+                        className="form-select"
+                        value={editing.promo?.type || "percent"}
+                        onChange={(e) =>
+                          setEditing((s) => ({
+                            ...s,
+                            promo: { ...(s.promo || {}), type: e.target.value },
+                          }))
+                        }
+                      >
+                        <option value="percent">Percent (%)</option>
+                        <option value="fixed">Fixed (Rp)</option>
+                      </select>
+                    </div>
+
+                    <div className="col-4">
+                      <label>Value</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        value={editing.promo?.value ?? ""}
+                        onChange={(e) =>
+                          setEditing((s) => ({
+                            ...s,
+                            promo: {
+                              ...(s.promo || {}),
+                              value: Number(e.target.value),
+                            },
+                          }))
+                        }
+                      />
+                    </div>
+
+                    <div className="col-4">
+                      <label>Start</label>
+                      <input
+                        type="date"
+                        className="form-control"
+                        value={editing.promo?.startDate || ""}
+                        onChange={(e) =>
+                          setEditing((s) => ({
+                            ...s,
+                            promo: {
+                              ...(s.promo || {}),
+                              startDate: e.target.value,
+                            },
+                          }))
+                        }
+                      />
+                    </div>
+
+                    <div className="col-4 mt-2">
+                      <label>End</label>
+                      <input
+                        type="date"
+                        className="form-control"
+                        value={editing.promo?.endDate || ""}
+                        onChange={(e) =>
+                          setEditing((s) => ({
+                            ...s,
+                            promo: {
+                              ...(s.promo || {}),
+                              endDate: e.target.value,
+                            },
+                          }))
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div className="modal-footer">
@@ -358,6 +622,59 @@ export default function Products() {
                       type="number"
                       className="form-control"
                     />
+                  </div>
+                </div>
+
+                <div className="mt-3 border-top pt-3">
+                  <label className="form-label">Promotion (optional)</label>
+
+                  <div className="form-check form-switch mb-2">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      id="promo_enabled"
+                      name="promo_enabled"
+                    />
+                    <label className="form-check-label" htmlFor="promo_enabled">
+                      Enable promo
+                    </label>
+                  </div>
+
+                  <div className="row g-2">
+                    <div className="col-4">
+                      <label>Type</label>
+                      <select className="form-select" name="promo_type">
+                        <option value="percent">Percent (%)</option>
+                        <option value="fixed">Fixed (Rp)</option>
+                      </select>
+                    </div>
+
+                    <div className="col-4">
+                      <label>Value</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        name="promo_value"
+                      />
+                    </div>
+
+                    <div className="col-4">
+                      <label>Start</label>
+                      <input
+                        type="date"
+                        className="form-control"
+                        name="promo_start"
+                      />
+                    </div>
+
+                    <div className="col-4 mt-2">
+                      <label>End</label>
+                      <input
+                        type="date"
+                        className="form-control"
+                        name="promo_end"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

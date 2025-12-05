@@ -1,13 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import { customersData } from "../components/Sample";
+import customersService from "../services/customers";
 
 export default function Customers() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const perPage = 10;
 
-  const [customers, setCustomers] = useState(customersData);
+  const [customers, setCustomers] = useState([]);
+
+  useEffect(() => {
+    let mounted = true;
+    customersService.getAll().then((list) => mounted && setCustomers(list || []));
+    return () => (mounted = false);
+  }, []);
 
   // =====================
   // ADD CUSTOMER
@@ -35,20 +41,15 @@ export default function Customers() {
         return { name, alamat, phone };
       },
     }).then((res) => {
-      if (res.isConfirmed) {
-        const newId = customers.length
-          ? Math.max(...customers.map((c) => c.id)) + 1
-          : 1;
-
-        const newData = {
-          id: newId,
-          ...res.value,
-        };
-
-        setCustomers((prev) => [...prev, newData]);
-
-        Swal.fire("Berhasil!", "Customer berhasil ditambahkan.", "success");
-      }
+        if (res.isConfirmed) {
+          customersService
+            .create({ ...res.value })
+            .then((created) => {
+              setCustomers((prev) => [...prev, created]);
+              Swal.fire("Berhasil!", "Customer berhasil ditambahkan.", "success");
+            })
+            .catch((err) => Swal.fire("Error", err.message || "Gagal tambah customer", "error"));
+        }
     });
   };
 
@@ -107,12 +108,15 @@ export default function Customers() {
         };
       },
     }).then((result) => {
-      if (result.isConfirmed) {
-        setCustomers((prev) =>
-          prev.map((c) => (c.id === cust.id ? { ...c, ...result.value } : c))
-        );
-        Swal.fire("Updated", "Customer berhasil diupdate!", "success");
-      }
+        if (result.isConfirmed) {
+          customersService
+            .update({ ...cust, ...result.value })
+            .then((updated) => {
+              setCustomers((prev) => prev.map((c) => (c.id === updated.id ? updated : c)));
+              Swal.fire("Updated", "Customer berhasil diupdate!", "success");
+            })
+            .catch((err) => Swal.fire("Error", err.message || "Gagal update customer", "error"));
+        }
     });
   };
 

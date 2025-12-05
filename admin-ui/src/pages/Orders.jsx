@@ -1,29 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import { ordersData, productsData } from "../components/Sample";
+import ordersService from "../services/orders";
+import productsService from "../services/products";
+import { useAuth } from "../context/AuthContext";
+import { hasPerm } from "../utils/hasPermission";
 
 export default function Orders() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const perPage = 10;
 
-  const [orders, setOrders] = useState(ordersData);
+  const [orders, setOrders] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [filterStatus, setFilterStatus] = useState("all");
 
-  // =====================
-  // SEARCH FILTER
-  // =====================
-  const filtered = orders.filter((o) => {
-    const key = search.toLowerCase();
-    return (
-      o.orderId.toLowerCase().includes(key) ||
-      o.customer.toLowerCase().includes(key) ||
-      o.status.toLowerCase().includes(key) ||
-      o.paymentMethod.toLowerCase().includes(key)
-    );
-  });
+  useEffect(() => {
+    let mounted = true;
+    ordersService.getAll().then((list) => mounted && setOrders(list || []));
+    productsService.getAll().then((list) => mounted && setProducts(list || []));
+    return () => (mounted = false);
+  }, []);
 
-  const totalPages = Math.ceil(filtered.length / perPage);
-  const current = filtered.slice((page - 1) * perPage, page * perPage);
+  const { user: authUser } = useAuth();
+  const canReadOrders = hasPerm(authUser, "order", "read");
+  const canUpdateOrders = hasPerm(authUser, "order", "update");
 
   // ============================
   // INPUT / EDIT RESI
@@ -39,15 +39,44 @@ export default function Orders() {
       cancelButtonText: "Batal",
     }).then((res) => {
       if (res.isConfirmed) {
-        setOrders((prev) =>
-          prev.map((o) =>
-            o.orderId === order.orderId ? { ...o, resi: res.value } : o
-          )
-        );
+        if (!canUpdateOrders)
+          return Swal.fire("Forbidden", "Anda tidak punya akses.", "warning");
 
-        Swal.fire("Berhasil!", "Nomor resi berhasil disimpan.", "success");
+        ordersService
+          .update({ ...order, resi: res.value })
+          .then((updated) => {
+            setOrders((prev) =>
+              prev.map((o) => (o.id === updated.id ? updated : o))
+            );
+            Swal.fire("Berhasil!", "Nomor resi berhasil disimpan.", "success");
+          })
+          .catch((err) =>
+            Swal.fire("Error", err.message || "Gagal simpan resi", "error")
+          );
       }
     });
+  };
+
+  // helper: map status -> color for display
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "pending":
+        return "orange";
+      case "paid":
+        return "purple";
+      case "process":
+        return "dodgerblue";
+      case "shipping":
+        return "teal";
+      case "success":
+        return "green";
+      case "returned":
+      case "refunded":
+      case "canceled":
+        return "red";
+      default:
+        return "gray";
+    }
   };
 
   // =====================
@@ -59,22 +88,34 @@ export default function Orders() {
       input: "select",
       inputOptions: {
         pending: "Pending",
-        process: "Process",
-        success: "Success",
-        canceled: "Canceled",
         paid: "Paid",
+        process: "Process",
+        shipping: "Shipping",
+        success: "Delivered",
+        returned: "Returned",
+        refunded: "Refunded",
+        canceled: "Canceled",
       },
       inputPlaceholder: "Select status",
       showCancelButton: true,
     }).then((result) => {
       if (result.isConfirmed && result.value) {
-        setOrders((prev) =>
-          prev.map((o) =>
-            o.orderId === orderId ? { ...o, status: result.value } : o
-          )
-        );
+        if (!canUpdateOrders)
+          return Swal.fire("Forbidden", "Anda tidak punya akses.", "warning");
 
-        Swal.fire("Updated!", "Status updated successfully.", "success");
+        const o = orders.find((x) => x.orderId === orderId);
+        if (!o) return;
+        ordersService
+          .update({ ...o, status: result.value })
+          .then((updated) => {
+            setOrders((prev) =>
+              prev.map((p) => (p.id === updated.id ? updated : p))
+            );
+            Swal.fire("Updated!", "Status updated successfully.", "success");
+          })
+          .catch((err) =>
+            Swal.fire("Error", err.message || "Gagal update status", "error")
+          );
       }
     });
   };
@@ -83,16 +124,7 @@ export default function Orders() {
   // VIEW DETAIL
   // =====================
   const handleViewDetail = (order) => {
-    const statusColor =
-      order.status === "pending"
-        ? "orange"
-        : order.status === "process"
-          ? "dodgerblue"
-          : order.status === "success"
-            ? "green"
-            : order.status === "paid"
-              ? "purple"
-              : "red";
+    const statusColor = getStatusColor(order.status);
 
     let html = `
       <div style="text-align:left">
@@ -124,7 +156,7 @@ export default function Orders() {
     `;
 
     order.items.forEach((i) => {
-      const product = productsData.find((p) => p.id === i.productId);
+      const product = products.find((p) => p.id === i.productId);
       html += `
         <p><b>${product ? product.name : "Unknown Product"}</b> - 
         Qty: ${i.qty} × Rp ${i.price.toLocaleString()}</p>`;
@@ -138,10 +170,12 @@ export default function Orders() {
       icon: "info",
       width: 620,
       didOpen: () => {
-        Swal.getPopup().querySelector("#btnStatus")
+        Swal.getPopup()
+          .querySelector("#btnStatus")
           ?.addEventListener("click", () => handleChangeStatus(order.orderId));
 
-        Swal.getPopup().querySelector("#btnResi")
+        Swal.getPopup()
+          .querySelector("#btnResi")
           ?.addEventListener("click", () => handleInputResi(order));
       },
     });
@@ -155,8 +189,9 @@ export default function Orders() {
 
     orders.forEach((o) => {
       const total = o.items.reduce((sum, i) => sum + i.qty * i.price, 0);
-      csv += `${o.orderId},${o.customer},${o.status},${o.paymentMethod},${o.resi || "-"
-        },${total}\n`;
+      csv += `${o.orderId},${o.customer},${o.status},${o.paymentMethod},${
+        o.resi || "-"
+      },${total}\n`;
     });
 
     const blob = new Blob([csv], { type: "text/csv" });
@@ -168,25 +203,108 @@ export default function Orders() {
     a.click();
   };
 
+  // helper: map internal status -> friendly label
+  const getStatusLabel = (status) => {
+    switch (status) {
+      case "pending":
+        return "Pending";
+      case "paid":
+        return "Paid";
+      case "process":
+        return "Processing";
+      case "shipping":
+        return "Shipping";
+      case "success":
+        return "Delivered";
+      case "returned":
+        return "Returned";
+      case "refunded":
+        return "Refunded";
+      case "canceled":
+        return "Canceled";
+      default:
+        return status;
+    }
+  };
+
+  // counts per status for badges
+  const statusCounts = orders.reduce((acc, o) => {
+    acc[o.status] = (acc[o.status] || 0) + 1;
+    acc.all = (acc.all || 0) + 1;
+    return acc;
+  }, {});
+
+  // filtered list and pagination
+  const filtered = orders.filter((o) => {
+    if (filterStatus && filterStatus !== "all" && o.status !== filterStatus)
+      return false;
+    if (search && search.trim()) {
+      const q = search.toLowerCase();
+      return (
+        String(o.orderId || "")
+          .toLowerCase()
+          .includes(q) ||
+        String(o.customer || "")
+          .toLowerCase()
+          .includes(q) ||
+        String(o.status || "")
+          .toLowerCase()
+          .includes(q)
+      );
+    }
+    return true;
+  });
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
+
+  // ensure current page is within range when data changes
+  useEffect(() => {
+    if (page > totalPages) setPage(totalPages);
+  }, [totalPages]);
+
+  const current = filtered.slice((page - 1) * perPage, page * perPage);
+
   return (
     <div className="container-fluid py-4">
       <div className="d-flex flex-column flex-md-row justify-content-between mb-3 gap-2">
         <h3 className="fw-bold">Orders</h3>
 
-        <div className="d-flex gap-2">
-          <input
-            type="text"
-            className="form-control"
-            style={{ width: "260px" }}
-            placeholder="Search ID, customer, status..."
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              setPage(1);
-            }}
-          />
+        <div className="d-flex gap-2 align-items-center">
+          <div className="d-flex flex-row flex-wrap gap-2 me-2">
+            {[
+              { key: "all", label: "All" },
+              { key: "pending", label: "Pending" },
+              { key: "process", label: "Processing" },
+              { key: "paid", label: "Paid" },
+              { key: "shipping", label: "Shipping" },
+              { key: "success", label: "Delivered" },
+              { key: "returned", label: "Returned" },
+              { key: "refunded", label: "Refunded" },
+              { key: "canceled", label: "Canceled" },
+            ].map((t) => {
+              const active = filterStatus === t.key;
+              return (
+                <button
+                  key={t.key}
+                  type="button"
+                  className={`btn btn-sm rounded-pill ${
+                    active ? "btn-primary text-white" : "btn-outline-secondary"
+                  }`}
+                  onClick={() => {
+                    setFilterStatus(t.key);
+                    setPage(1);
+                  }}
+                >
+                  <span className="me-2">{t.label}</span>
+                  <span className="badge bg-white text-secondary border">
+                    {statusCounts[t.key] || 0}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
 
-          <button className="btn btn-success" onClick={exportCSV}>
+          <button className="btn btn-outline-success" onClick={exportCSV}>
             Export CSV
           </button>
         </div>
@@ -226,19 +344,10 @@ export default function Orders() {
                         <span
                           style={{
                             fontWeight: "bold",
-                            color:
-                              order.status === "pending"
-                                ? "orange"
-                                : order.status === "process"
-                                  ? "dodgerblue"
-                                  : order.status === "success"
-                                    ? "green"
-                                    : order.status === "paid"
-                                      ? "purple"
-                                      : "red",
+                            color: getStatusColor(order.status),
                           }}
                         >
-                          {order.status}
+                          {getStatusLabel(order.status)}
                         </span>
                       </td>
 
@@ -254,19 +363,32 @@ export default function Orders() {
                         <button
                           className="btn btn-sm btn-secondary me-2"
                           onClick={() => handleViewDetail(order)}
+                          disabled={!canReadOrders}
+                          title={
+                            !canReadOrders
+                              ? "You don't have permission to view orders"
+                              : undefined
+                          }
                         >
                           View
                         </button>
 
                         {(order.status === "process" ||
-                          order.status === "paid") && (
-                            <button
-                              className="btn btn-sm btn-primary"
-                              onClick={() => handleInputResi(order)}
-                            >
-                              Input Resi
-                            </button>
-                          )}
+                          order.status === "paid" ||
+                          order.status === "shipping") && (
+                          <button
+                            className="btn btn-sm btn-primary"
+                            onClick={() => handleInputResi(order)}
+                            disabled={!canUpdateOrders}
+                            title={
+                              !canUpdateOrders
+                                ? "You don't have permission to update orders"
+                                : undefined
+                            }
+                          >
+                            Input Resi
+                          </button>
+                        )}
                       </td>
                     </tr>
                   );
