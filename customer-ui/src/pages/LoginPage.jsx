@@ -1,9 +1,15 @@
 import React from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap-icons/font/bootstrap-icons.css";
 import cacing from "../assets/images/cacing.png";
-
+import { useNavigate } from "react-router-dom";
 function LoginPage() {
+  const navigate = useNavigate();
+  const goToLand = () => {
+    navigate("/");
+  };
+  const goToReg = () => {
+    navigate("/register");
+  };
+
   return (
     <div
       className="d-flex flex-column justify-content-between"
@@ -71,13 +77,22 @@ function LoginPage() {
 
               <div className="text-center mt-2">
                 <small className="text-muted">Not registered? </small>
-                <a
-                  href="#"
-                  className="text-decoration-none"
-                  style={{ color: "#153B77" }}
+                <button
+                  className="btn btn-link text-decoration-none"
+                  styled={{ color: "#325A89" }}
+                  onClick={goToReg}
                 >
                   Register
-                </a>
+                </button>
+              </div>
+              <div className="text-center mt-2">
+                <button
+                  className="btn btn-link text-decoration-none"
+                  styled={{ color: "#325A89" }}
+                  onClick={goToLand}
+                >
+                  Kembali
+                </button>
               </div>
             </div>
           </div>

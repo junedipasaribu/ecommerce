@@ -1,3 +1,6 @@
+import cacing from "../assets/images/cacing.png";
+import "../styling/icon.css";
+
 export const CartIcon = () => {
   return (
     <svg
@@ -43,30 +46,6 @@ export const SearchIcon = () => {
   );
 };
 
-export const ArrowRightIcon = () => (
-  <svg
-    width="28"
-    height="28"
-    fill="white"
-    viewBox="0 0 16 16"
-    className="carousel-icon"
-  >
-    <path d="M6 12.796V3.204L11.481 8zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753" />
-  </svg>
-);
-
-export const ArrowLeftIcon = () => (
-  <svg
-    width="28"
-    height="28"
-    fill="white"
-    viewBox="0 0 16 16"
-    className="carousel-icon"
-  >
-    <path d="M10 12.796V3.204L4.519 8zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753" />
-  </svg>
-);
-
 export const LocationIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -94,4 +73,20 @@ export const PayIcon = () => (
   >
     <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1H0zm0 3v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7zm3 2h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1" />
   </svg>
+);
+
+export const Logo = () => (
+  <button
+    className="logo-btn d-flex align-items-center gap-2"
+    role="button"
+    aria-label="KF Apps Logo"
+  >
+    <div className="text-start logo-text">
+      KF APPS
+      <br />
+      Mini E-commerce
+    </div>
+
+    <img src={cacing} alt="KF Apps Icon" width="32" height="32" />
+  </button>
 );

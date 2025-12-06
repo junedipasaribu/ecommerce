@@ -1,9 +1,14 @@
-import { SearchIcon } from "./Icons";
+import { SearchIcon, Logo } from "./Icons";
 import "../styling/Navbar.css";
 import CartModal from "./modals/CartModal.jsx";
 import UserModal from "./modals/UserModal.jsx";
+import { useNavigate } from "react-router-dom";
 
-const Navbar = () => {
+const Navbar = ({ activeTab, setActiveTab }) => {
+  const navigate = useNavigate();
+  const goToLand = () => {
+    navigate("/");
+  };
   const handleSearchClick = () => {
     console.log("Search clicked"); // nanti diganti trigger search
   };
@@ -11,7 +16,9 @@ const Navbar = () => {
   return (
     <header className="navbar">
       <div className="grid-container">
-        <div className="col logo">KF APPS</div>
+        <div className="col logo">
+          <Logo />
+        </div>
 
         <div className="col search-bar">
           <div className="search-wrapper">

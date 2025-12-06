@@ -9,6 +9,7 @@ const CardFilter = () => {
       key={category.id}
       className="category-button"
       onClick={() => console.log(`Category clicked: ${category.name}`)}
+      style={{ color: "#325A89" }}
     >
       {category.name.split("\n").map((line, index) => (
         <React.Fragment key={index}>
@@ -49,7 +50,7 @@ const CardFilter = () => {
       <div className="cardfilter-container">
         <div className="products-section">
           <div className="products-header">
-            <h3 className="products-title">Produk Terpopuler</h3>
+            <h3 className="products-title">Produk</h3>
             <div className="sort-options">
               <select className="sort-select">
                 <option value="popular">Terpopuler</option>
@@ -69,12 +70,6 @@ const CardFilter = () => {
           <div className="load-more-section">
             <button className="load-more-btn">Tampilkan Lebih Banyak</button>
           </div>
-        </div>
-
-        <div className="filter-footer">
-          <p className="footer-text">
-            © Tim 5 Cacing Capston Project 2025. Hak Cipta Dilindungi
-          </p>
         </div>
       </div>
     </>

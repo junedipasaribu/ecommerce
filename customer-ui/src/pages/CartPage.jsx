@@ -9,11 +9,6 @@ function CartPage() {
         <div className="cart-full-grid">
           <Cart />
         </div>
-        <div>
-          <div className="cardfilter-full-grid">
-            <CardFilter />
-          </div>
-        </div>
       </div>
     </>
   );

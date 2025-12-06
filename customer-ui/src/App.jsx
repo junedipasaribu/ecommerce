@@ -8,6 +8,8 @@ import DetailItemPage from "./pages/DetailItemPage";
 import DetailFilterPage from "./pages/DetailFilterPage";
 import OrderHistoryPage from "./pages/OrderHistoryPage";
 import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 
 function App() {
   return (
@@ -24,7 +26,9 @@ function App() {
             <Route path="/history" element={<OrderHistoryPage />} />
           </Route>
 
-          <Route path="login" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot" element={<ForgotPasswordPage />} />
         </Routes>
       </div>
     </>

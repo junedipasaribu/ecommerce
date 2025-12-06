@@ -152,10 +152,7 @@ function Cart() {
                               <div className="d-flex align-items-center ps-2">
                                 <div className="me-3">
                                   <img
-                                    src={
-                                      item.image ||
-                                      "https://via.placeholder.com/60"
-                                    }
+                                    src={item.image || "..."}
                                     alt={item.name}
                                     width="60"
                                     height="60"
@@ -277,10 +274,7 @@ function Cart() {
                               <div className="d-flex">
                                 <div className="me-3">
                                   <img
-                                    src={
-                                      item.image ||
-                                      "https://via.placeholder.com/60"
-                                    }
+                                    src={item.image || "..."}
                                     alt={item.name}
                                     width="60"
                                     height="60"

@@ -1,7 +1,7 @@
 import CarouselPromo from "../components/Carousel";
 import CardFilter from "../components/CardFilter";
 import "../Index.css";
-import Car from "../components/test.jsx";
+import Cart from "../components/Cart";
 
 const LandingPage = () => {
   return (
@@ -9,7 +9,6 @@ const LandingPage = () => {
       <div className="carousel-full-grid">
         <CarouselPromo />
       </div>
-
       <div className="cardfilter-full-grid">
         <CardFilter />
       </div>
