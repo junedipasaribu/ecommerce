@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
+import cacing from "../assets/images/cacing.png";
 import Swal from "sweetalert2";
 
 export default function Login() {
@@ -67,7 +68,7 @@ export default function Login() {
 
             <p className="mt-4">powered by :</p>
             <h6>Underground Innovation Engineers.</h6>
-            {/* 
+
             <div className="mt-4">
               <img
                 src={cacing}
@@ -76,7 +77,7 @@ export default function Login() {
                 height="110"
                 style={{ filter: "brightness(0) invert(1)" }}
               />
-            </div> */}
+            </div>
           </div>
 
           {/* RIGHT SECTION LOGIN CARD */}
