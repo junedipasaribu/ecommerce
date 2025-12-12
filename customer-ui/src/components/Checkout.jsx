@@ -115,7 +115,7 @@ function Checkout() {
   const shippingCost =
     courierOptions.find((c) => c.name === selectedCourier)?.cost || 0;
   const cartTotal = calculateCartTotal();
-  const totalPpn = cartTotal * 0.11;
+  const totalPpn = cartTotal * 0;
   const totalPayment = cartTotal + shippingCost + totalPpn;
 
   const handleProceedToCheckout = async () => {

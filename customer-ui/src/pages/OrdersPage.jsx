@@ -1,5 +1,4 @@
-// src/pages/OrdersPage.jsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { orderService } from "../services/orderService";
 
@@ -7,6 +6,7 @@ function OrdersPage() {
   const [loading, setLoading] = useState(true);
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState(null);
+  const componentRef = useRef();
 
   useEffect(() => {
     fetchOrders();

@@ -1,8 +1,7 @@
-// src/pages/OrderDetailPage.jsx
 import { useState, useEffect, useRef } from "react";
 import { useParams, useLocation, Link, useNavigate } from "react-router-dom";
 import { orderService } from "../services/orderService";
-import { useReactToPrint } from "react-to-print";
+// import { useReactToPrint } from "react-to-print";
 
 function OrderDetailPage() {
   const { orderId } = useParams();
@@ -12,15 +11,12 @@ function OrderDetailPage() {
   const [order, setOrder] = useState(null);
   const [error, setError] = useState(null);
   const [processing, setProcessing] = useState(false);
-  const componentRef = useRef();
+  // const componentRef = useRef();
 
   // const handlePrint = useReactToPrint({
   //   content: () => componentRef.current,
-  //   documentTitle: "Invoice-123",
-  //   pageStyle: `
-  //     @page { size: A4; margin: 20mm; }
-  //     body { font-family: Arial; }
-  //   `,
+  //   documentTitle: `Order-${orderId}`,
+  //   onAfterPrint: () => console.log("Printed successfully!"),
   // });
 
   useEffect(() => {
@@ -32,11 +28,9 @@ function OrderDetailPage() {
       setLoading(true);
       setError(null);
 
-      // Try to get from location state first (if coming from payment success)
       if (location.state?.order) {
         setOrder(location.state.order);
       } else {
-        // Fetch from API
         const response = await orderService.getOrderById(orderId);
         setOrder(response.data || response);
       }
@@ -62,7 +56,7 @@ function OrderDetailPage() {
       setProcessing(true);
       await orderService.cancelOrder(orderId, "Dibatalkan oleh pengguna");
       alert("Order berhasil dibatalkan");
-      fetchOrderDetails(); // Refresh data
+      fetchOrderDetails();
     } catch (error) {
       console.error("Error cancelling order:", error);
       alert("Gagal membatalkan order");
@@ -142,7 +136,7 @@ function OrderDetailPage() {
 
   return (
     <div className="container py-5">
-      <div className="row justify-content-center" ref={componentRef}>
+      <div className="row justify-content-center">
         <div className="col-lg-10">
           {/* Header */}
           <div className="d-flex justify-content-between align-items-center mb-4">
@@ -184,7 +178,7 @@ function OrderDetailPage() {
           )}
 
           {order ? (
-            <>
+            <div>
               {/* Order Summary Card */}
               <div className="card border-0 shadow-sm mb-4">
                 <div className="card-body">
@@ -280,10 +274,7 @@ function OrderDetailPage() {
                       </button>
                     )}
 
-                    <button
-                      className="btn btn-outline-primary"
-                      // onClick={handlePrint}
-                    >
+                    <button className="btn btn-outline-primary">
                       <i className="bi bi-printer me-2"></i>
                       Cetak Invoice
                     </button>
@@ -367,17 +358,7 @@ function OrderDetailPage() {
                           ))}
                         </tbody>
                         <tfoot>
-                          <tr>
-                            <td colSpan="3" className="text-end fw-bold">
-                              Subtotal
-                            </td>
-                            <td className="text-end fw-bold">
-                              {formatCurrency(
-                                order.subtotal || order.totalAmount
-                              )}
-                            </td>
-                          </tr>
-                          {order.ppn && (
+                          {/* {order.ppn && (
                             <tr>
                               <td colSpan="3" className="text-end">
                                 PPN (11%)
@@ -386,7 +367,7 @@ function OrderDetailPage() {
                                 {formatCurrency(order.ppn)}
                               </td>
                             </tr>
-                          )}
+                          )} */}
                           {order.shippingCost && (
                             <tr>
                               <td colSpan="3" className="text-end">
@@ -397,6 +378,16 @@ function OrderDetailPage() {
                               </td>
                             </tr>
                           )}
+                          <tr>
+                            <td colSpan="3" className="text-end fw-bold">
+                              Subtotal
+                            </td>
+                            <td className="text-end fw-bold">
+                              {formatCurrency(
+                                order.subtotal || order.totalAmount
+                              )}
+                            </td>
+                          </tr>
                           <tr className="table-active">
                             <td colSpan="3" className="text-end fw-bold fs-5">
                               Total
@@ -564,7 +555,7 @@ function OrderDetailPage() {
                   </div>
                 </div>
               </div>
-            </>
+            </div>
           ) : (
             <div className="text-center py-5">
               <div className="mb-4">

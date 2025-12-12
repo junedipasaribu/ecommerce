@@ -6,7 +6,7 @@ import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import DetailItemPage from "./pages/DetailItemPage";
 import DetailFilterPage from "./pages/DetailFilterPage";
-import OrderHistoryPage from "./pages/OrderHistoryPage";
+// import OrderHistoryPage from "./pages/OrderHistoryPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
@@ -41,14 +41,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route
+        {/* <Route
           path="history"
           element={
             <ProtectedRoute>
               <OrderHistoryPage />
             </ProtectedRoute>
           }
-        />
+        /> */}
         <Route
           path="payment/:orderId"
           element={
