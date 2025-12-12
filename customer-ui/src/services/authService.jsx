@@ -24,7 +24,7 @@ export const authService = {
   getCurrentUser: async () => {
     try {
       const response = await axiosInstance.get("/users/profile");
-      console.log(response.data);
+
       return response.data;
     } catch (error) {
       console.error("Get current user failed", error.response?.data);

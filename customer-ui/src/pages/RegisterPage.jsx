@@ -21,7 +21,7 @@ function RegisterPage() {
     password: "",
     phone: "",
     address: "",
-    pin: "", // PIN 6 digit untuk pembayaran
+    pin: "",
     agreeTerms: false,
   });
 
@@ -30,7 +30,6 @@ function RegisterPage() {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
-    // Validasi khusus untuk PIN (hanya angka, maks 6 digit)
     if (name === "pin") {
       if (/^\d*$/.test(value) && value.length <= 6) {
         setFormData({
@@ -492,7 +491,7 @@ function RegisterPage() {
                     className="form-label small fw-medium"
                     style={{ color: "#153B77" }}
                   >
-                    PIN Pembayaran (6 digit){" "}
+                    PIN Aplikasi (6 digit){" "}
                     <span className="text-danger">*</span>
                   </label>
                   <div className="input-group">

@@ -1,8 +1,8 @@
 // src/pages/OrderDetailPage.jsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useLocation, Link, useNavigate } from "react-router-dom";
 import { orderService } from "../services/orderService";
-import { paymentService } from "../services/paymentService";
+import { useReactToPrint } from "react-to-print";
 
 function OrderDetailPage() {
   const { orderId } = useParams();
@@ -12,6 +12,16 @@ function OrderDetailPage() {
   const [order, setOrder] = useState(null);
   const [error, setError] = useState(null);
   const [processing, setProcessing] = useState(false);
+  const componentRef = useRef();
+
+  // const handlePrint = useReactToPrint({
+  //   content: () => componentRef.current,
+  //   documentTitle: "Invoice-123",
+  //   pageStyle: `
+  //     @page { size: A4; margin: 20mm; }
+  //     body { font-family: Arial; }
+  //   `,
+  // });
 
   useEffect(() => {
     fetchOrderDetails();
@@ -132,7 +142,7 @@ function OrderDetailPage() {
 
   return (
     <div className="container py-5">
-      <div className="row justify-content-center">
+      <div className="row justify-content-center" ref={componentRef}>
         <div className="col-lg-10">
           {/* Header */}
           <div className="d-flex justify-content-between align-items-center mb-4">
@@ -270,7 +280,10 @@ function OrderDetailPage() {
                       </button>
                     )}
 
-                    <button className="btn btn-outline-primary">
+                    <button
+                      className="btn btn-outline-primary"
+                      // onClick={handlePrint}
+                    >
                       <i className="bi bi-printer me-2"></i>
                       Cetak Invoice
                     </button>
