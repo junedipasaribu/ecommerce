@@ -207,6 +207,10 @@ function OrderDetailPage() {
                         <div className="mt-1">
                           {getStatusBadge(order.status)}
                         </div>
+                        <small className="text-muted d-block">
+                          Alamat Order
+                        </small>
+                        <div className="mt-1">{order.address}</div>
                       </div>
                     </div>
 
@@ -315,7 +319,7 @@ function OrderDetailPage() {
                                   {item.image ? (
                                     <img
                                       src={item.image}
-                                      alt={item.name}
+                                      alt={item.productName}
                                       className="rounded me-3"
                                       style={{
                                         width: "50px",
@@ -332,7 +336,7 @@ function OrderDetailPage() {
                                     </div>
                                   )}
                                   <div>
-                                    <h6 className="mb-0">{item.name}</h6>
+                                    <h6 className="mb-0">{item.productName}</h6>
                                     {item.description && (
                                       <small className="text-muted">
                                         {item.description}
@@ -575,7 +579,7 @@ function OrderDetailPage() {
                   <i className="bi bi-receipt me-2"></i>
                   Lihat Order Lainnya
                 </Link>
-                <Link to="/" className="btn btn-outline-primary">
+                <Link to="/" className="forceback">
                   <i className="bi bi-house-door me-2"></i>
                   Kembali ke Beranda
                 </Link>

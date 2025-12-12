@@ -3,7 +3,7 @@ import axiosInstance from "../api/axiosInstance";
 export const addressService = {
   getAllAddresses: async () => {
     try {
-      const response = await axiosInstance.get(`/addresses`);
+      const response = await axiosInstance.get("/addresses");
       return response.data;
     } catch (error) {
       console.error("❌ GET /addresses error:", error);

@@ -55,6 +55,46 @@
   color: #f6921e;
 }
 
+.btn-force-warning {
+  padding: 7px;
+  background-color: #f6921e;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.btn-force-warning:hover {
+  background-color: #3d260c;
+}
+
+.btn-force-blue {
+  padding: 7px;
+  background-color: #0b3f7e;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.btn-force-blue:hover {
+  background-color: #0a2a52;
+}
+
 /* Payment Summary */
 .card-header {
   background-color: #fff;

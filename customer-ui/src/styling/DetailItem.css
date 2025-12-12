@@ -571,6 +571,31 @@
   color: #325a89 !important;
 }
 
+.forceback {
+  background: linear-gradient(135deg, #f6921e 0%, #e5811b 100%);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: "Montserrat", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: auto;
+}
+
+.forceback:hover {
+  background: linear-gradient(135deg, #e5811b 0%, #d47217 100%);
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(246, 146, 30, 0.3);
+}
+
+.forcebacks:active {
+  transform: scale(0.98);
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
   .detail-content {

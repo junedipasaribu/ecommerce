@@ -217,7 +217,7 @@ function UserModal({ open, setOpen, closeOtherModals }) {
                     {getUserEmail() && (
                       <p className="user-email">{getUserEmail()}</p>
                     )}
-                    <span className="user-status">Online</span>
+                    {/* <span className="user-status">Online</span> */}
                   </div>
                 </div>
 
@@ -226,13 +226,13 @@ function UserModal({ open, setOpen, closeOtherModals }) {
                   <div className="menu-section">
                     <h5 className="menu-title">Akun Saya</h5>
                     <ul className="menu-list">
-                      <li>
+                      {/* <li>
                         <button className="menu-item" onClick={handleProfile}>
                           <i className="bi bi-person me-2"></i>
                           <span>Profil Saya</span>
                           <i className="bi bi-chevron-right"></i>
                         </button>
-                      </li>
+                      </li> */}
 
                       <li>
                         <button className="menu-item" onClick={handleOrders}>

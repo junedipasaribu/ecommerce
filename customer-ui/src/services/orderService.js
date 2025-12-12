@@ -4,7 +4,6 @@ export const orderService = {
   // ✅ BENAR: Gunakan endpoint /orders/my/{orderId}
   getOrderById: async (orderId) => {
     try {
-      console.log(`🔍 Fetching order ${orderId} from /orders/my/${orderId}`);
       const response = await axiosInstance.get(`/orders/my/${orderId}`);
       return response.data;
     } catch (error) {
@@ -27,12 +26,9 @@ export const orderService = {
   // ✅ BENAR: Cancel order
   cancelOrder: async (orderId, reason) => {
     try {
-      const response = await axiosInstance.post(
-        `/orders/my/${orderId}/cancel`,
-        {
-          reason,
-        }
-      );
+      const response = await axiosInstance.patch(`/orders/cancel/${orderId}`, {
+        reason,
+      });
       return response.data;
     } catch (error) {
       console.error("Error cancelling order:", error);

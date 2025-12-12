@@ -36,11 +36,14 @@ function OrdersPage() {
   const getStatusBadge = (status) => {
     const badges = {
       PENDING_PAYMENT: { color: "warning", text: "Menunggu Pembayaran" },
-      PAID: { color: "success", text: "Telah Dibayar" },
+      PAID: { color: "primary", text: "Telah Dibayar" },
       PROCESSING: { color: "info", text: "Diproses" },
-      SHIPPED: { color: "primary", text: "Dikirim" },
+      SHIPPING: { color: "primary", text: "Dikirim" },
       DELIVERED: { color: "success", text: "Terkirim" },
       CANCELLED: { color: "danger", text: "Dibatalkan" },
+      CANCELLED_AUTO: { color: "danger", text: "Tidak ada Pembayaran" },
+      COMPLETED: { color: "success", text: "Terkirim" },
+      CANCELLED_BY_USER: { color: "danger", text: "Dibatalkan Oleh User" },
     };
 
     const badge = badges[status] || { color: "secondary", text: status };

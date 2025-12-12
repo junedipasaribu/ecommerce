@@ -53,7 +53,7 @@ export const paymentService = {
             `Payment failed with status ${error.response.status}`,
         };
         console.log("⚠️ Error response:", errorData);
-        return errorData; // Return error object, bukan throw
+        return errorData;
       }
 
       // Error network atau lainnya

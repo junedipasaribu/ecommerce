@@ -756,7 +756,7 @@ function Checkout() {
                         <div className="col-6">
                           <button
                             type="button"
-                            className="btn btn-primary w-100"
+                            className="btn-force-blue w-100"
                             onClick={() => {
                               setSuccess(null);
                               navigate(
@@ -776,7 +776,7 @@ function Checkout() {
                         success.status === "PENDING_PAYMENT" && (
                           <button
                             type="button"
-                            className="btn btn-warning w-100 mt-2"
+                            className="btn-force-warning w-100 mt-2"
                             onClick={() => {
                               navigate(
                                 `/payment/${
@@ -1069,12 +1069,12 @@ function Checkout() {
                       </span>
                     </div>
 
-                    <div className="d-flex justify-content-between mb-2">
+                    {/* <div className="d-flex justify-content-between mb-2">
                       <span style={{ color: "#325A89" }}>PPN</span>
                       <span className="fw-medium" style={{ color: "#0B3F7E" }}>
                         Rp {totalPpn.toLocaleString("id-ID")}
                       </span>
-                    </div>
+                    </div> */}
 
                     <div className="d-flex justify-content-between mb-2">
                       <span style={{ color: "#325A89" }}>
@@ -1134,6 +1134,7 @@ function Checkout() {
                   Dengan menekan tombol "Bayar Sekarang", Anda menyetujui syarat
                   dan ketentuan.
                 </small>
+                <span> Harga sudah termasuk PPN 11%.</span>
               </div>
             </div>
           </div>

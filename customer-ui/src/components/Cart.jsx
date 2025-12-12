@@ -74,15 +74,12 @@ function Cart() {
 
     try {
       setIsDeleting(true);
-      console.log(`🗑️ Deleting product with ID: ${productId}`);
 
       await cartService.removeFromCart(productId);
 
       await fetchCart();
 
       setSelectedItems((prev) => prev.filter((id) => id !== productId));
-
-      console.log("✅ Item deleted successfully");
     } catch (err) {
       console.error("Gagal menghapus item:", err);
       console.error("Error response:", err.response?.data);
@@ -109,13 +106,9 @@ function Cart() {
     try {
       setIsDeleting(true);
 
-      console.log("🗑️ Clearing selected items:", selectedItems);
-
       const deletePromises = selectedItems.map(async (productId) => {
         try {
-          console.log(`Deleting productId: ${productId}`);
           await cartService.removeFromCart(productId);
-          console.log(`✅ Deleted: ${productId}`);
         } catch (err) {
           console.error(`❌ Failed to delete ${productId}:`, err);
         }
@@ -126,8 +119,6 @@ function Cart() {
       await fetchCart();
 
       setSelectedItems([]);
-
-      console.log("✅ All selected items deleted");
     } catch (err) {
       console.error("Gagal menghapus item terpilih:", err);
       alert("Gagal menghapus beberapa item. Silakan coba lagi.");
@@ -205,6 +196,18 @@ function Cart() {
   const selectedTotal = listCart
     .filter((item) => selectedItems.includes(item.productId))
     .reduce((total, item) => total + item.price * item.qty, 0);
+
+  const getValidImageUrl = (imageUrl) => {
+    if (!imageUrl || imageUrl.trim() === "") {
+      return "https://via.placeholder.com/500x500/f5f5f5/999?text=No+Image";
+    }
+
+    if (imageUrl.includes("dummyimage/")) {
+      return imageUrl.replace("dummyimage/", "dummyimage.com/");
+    }
+
+    return imageUrl;
+  };
 
   if (loading)
     return (
@@ -338,15 +341,15 @@ function Cart() {
                             </td>
                             <td className="align-middle">
                               <div className="d-flex align-items-center ps-2">
-                                <div className="me-3">
+                                {/* <div className="me-3">
                                   <img
-                                    src={item.image || "..."}
+                                    src={getValidImageUrl(item.imageUrl)}
                                     alt={item.name}
                                     width="60"
                                     height="60"
                                     className="rounded object-fit-cover"
                                   />
-                                </div>
+                                </div> */}
                                 <div>
                                   <div className="fw-medium mb-1">
                                     {item.name}
@@ -541,24 +544,14 @@ function Cart() {
                   <span className="text-muted">Diskon</span>
                   <span className="text-success fw-medium">Rp.0</span>
                 </div>
-
-                <div className="d-flex justify-content-between mb-3">
-                  <span className="text-muted">PPN (11%)</span>
-                  <span className="fw-medium">
-                    Rp.
-                    {Math.round(selectedTotal * 0.11).toLocaleString("id-ID")}
-                  </span>
-                </div>
               </div>
 
               <div className="border-top pt-3 mb-4">
                 <div className="d-flex justify-content-between align-items-center">
-                  <h6 className="mb-0 fw-bold">Total Pembayaran</h6>
+                  <h6 className="mb-0 fw-bold">Total Transaksi</h6>
                   <h4 className="mb-0 text-primary fw-bold">
                     Rp.
-                    {(
-                      selectedTotal + Math.round(selectedTotal * 0.11)
-                    ).toLocaleString("id-ID")}
+                    {selectedTotal.toLocaleString("id-ID")}
                   </h4>
                 </div>
                 {selectedItems.length > 0 && (

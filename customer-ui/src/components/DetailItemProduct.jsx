@@ -435,12 +435,13 @@ function DetailItem() {
             {/* Product Metadata */}
             <div className="product-metadata border-top pt-3">
               <h5 className="mb-3">Detail Produk</h5>
-              {/* <div className="row small">
+              <div className="row small">
                 <div className="col-6 text-muted">
                   <div className="mb-2">
-                    <i className="bi bi-upc me-1"></i> SKU:
+                    <i className="bi bi-upc me-1"></i> Harga Sudah Termasuk PPN
+                    11%
                   </div>
-                  <div className="mb-2">
+                  {/* <div className="mb-2">
                     <i className="bi bi-box me-1"></i> Berat:
                   </div>
                   <div className="mb-2">
@@ -448,9 +449,9 @@ function DetailItem() {
                   </div>
                   <div className="mb-2">
                     <i className="bi bi-calendar me-1"></i> Ditambahkan:
-                  </div>
+                  </div> */}
                 </div>
-                <div className="col-6 text-end">
+                {/* <div className="col-6 text-end">
                   <div className="mb-2">{product.sku || "-"}</div>
                   <div className="mb-2">
                     {product.weight ? `${product.weight} kg` : "-"}
@@ -461,8 +462,8 @@ function DetailItem() {
                       ? new Date(product.createdAt).toLocaleDateString("id-ID")
                       : "-"}
                   </div>
-                </div>
-              </div> */}
+                </div> */}
+              </div>
             </div>
 
             {/* Seller Info */}
