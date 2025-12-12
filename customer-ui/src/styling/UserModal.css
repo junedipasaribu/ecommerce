@@ -1,0 +1,356 @@
+/* User Modal Styles - Updated to match CartModal */
+.user-modal-container {
+  position: relative;
+}
+
+.user-icon-container {
+  position: relative;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.user-icon-container:hover {
+  background-color: rgba(50, 90, 137, 0.1);
+}
+
+.user-status-indicator {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #28a745;
+  border: 2px solid white;
+}
+
+/* User Modal Content */
+.user-modal-content {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 320px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 1065; /* Lebih tinggi dari cart modal */
+  margin-top: 8px;
+  animation: slideDown 0.2s ease;
+}
+
+/* Header */
+.user-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.user-title {
+  display: flex;
+  align-items: center;
+  color: #0b3f7e;
+}
+
+.user-title i {
+  font-size: 1.2rem;
+  color: #325a89;
+}
+
+.user-title h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.user-close-btn {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: #6c757d;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.user-close-btn:hover {
+  background-color: #f8f9fa;
+  color: #0b3f7e;
+}
+
+/* Body */
+.user-modal-body {
+  padding: 16px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Loading State */
+.user-loading {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.user-loading .spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #325a89;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 12px;
+}
+
+.user-loading p {
+  color: #6c757d;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* Error State */
+.user-error {
+  text-align: center;
+  padding: 30px 20px;
+}
+
+.user-error i {
+  font-size: 2.5rem;
+  color: #dc3545;
+  margin-bottom: 12px;
+}
+
+.user-error p {
+  color: #dc3545;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+}
+
+.btn-retry {
+  background-color: #325a89;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background-color 0.2s;
+}
+
+.btn-retry:hover {
+  background-color: #0b3f7e;
+}
+
+/* Not Logged In State */
+.user-not-logged {
+  text-align: center;
+  padding: 30px 20px;
+}
+
+.user-not-logged i {
+  font-size: 2.5rem;
+  color: #6c757d;
+  margin-bottom: 12px;
+}
+
+.user-not-logged h4 {
+  color: #343a40;
+  font-weight: 500;
+  margin-bottom: 8px;
+  font-size: 1rem;
+}
+
+.user-not-logged-message {
+  color: #6c757d;
+  display: block;
+  margin-bottom: 20px;
+  font-size: 0.85rem;
+}
+
+.user-auth-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.btn-login,
+.btn-register {
+  padding: 10px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-login {
+  background-color: #325a89;
+  color: white;
+}
+
+.btn-login:hover {
+  background-color: #0b3f7e;
+}
+
+.btn-register {
+  background-color: #f8f9fa;
+  color: #325a89;
+  border: 1px solid #dee2e6;
+}
+
+.btn-register:hover {
+  background-color: #e9ecef;
+}
+
+/* User Profile Section */
+.user-profile-section {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.user-avatar {
+  margin-right: 12px;
+}
+
+.avatar-placeholder {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #325a89;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.user-info {
+  flex: 1;
+}
+
+.user-name {
+  margin: 0 0 4px 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #343a40;
+}
+
+.user-email {
+  margin: 0 0 4px 0;
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.user-status {
+  display: inline-block;
+  background: #28a745;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+/* User Menu */
+.user-menu {
+  margin-bottom: 16px;
+}
+
+.menu-section {
+  margin-bottom: 16px;
+}
+
+.menu-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  padding-left: 4px;
+}
+
+.menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-list li {
+  margin-bottom: 2px;
+}
+
+.menu-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  color: #343a40;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.menu-item:hover {
+  background-color: #f8f9fa;
+  color: #0b3f7e;
+}
+
+.menu-item i:first-child {
+  width: 20px;
+  text-align: center;
+  color: #325a89;
+}
+
+.menu-item span {
+  flex: 1;
+  margin: 0 10px;
+}
+
+.menu-item i:last-child {
+  color: #adb5bd;
+  font-size: 0.85rem;
+}
+
+/* Logout Section */
+.user-logout-section {
+  padding-top: 16px;
+  border-top: 1px solid #e9ecef;
+}
+
+.btn-logout {
+  width: 100%;
+  padding: 10px 16px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+
+.btn-logout:hover {
+  background: #c82333;
+}

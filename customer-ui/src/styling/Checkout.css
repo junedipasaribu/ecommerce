@@ -1,0 +1,146 @@
+/* Checkout.css */
+
+/* Custom Styles for Checkout Page */
+.object-fit-cover {
+  object-fit: cover;
+}
+
+/* Dropdown Custom */
+.dropdown-menu {
+  max-height: 300px;
+  overflow-y: auto;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  border: 1px solid #dee2e6;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background-color: rgba(246, 146, 30, 0.1);
+  color: #f6921e;
+}
+
+/* Custom Scrollbar */
+.dropdown-menu::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dropdown-menu::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 10px;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb:hover {
+  background: #ccc;
+}
+
+/* Table Styling */
+.table th {
+  font-weight: 600;
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(246, 146, 30, 0.05);
+}
+
+/* Button Styling */
+.btn-outline-secondary:hover {
+  border-color: #f6921e;
+  color: #f6921e;
+}
+
+/* Payment Summary */
+.card-header {
+  background-color: #fff;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container-fluid {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .card-body {
+    padding: 1rem !important;
+  }
+
+  .table-responsive {
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .dropdown-menu {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 90% !important;
+    max-width: 400px;
+    z-index: 9999;
+  }
+}
+
+/* Animation for dropdown */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-menu.show {
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Sticky sidebar on desktop */
+@media (min-width: 992px) {
+  .col-lg-4 .card:first-child {
+    position: sticky;
+    top: 20px;
+  }
+}
+
+/* Custom color for badges */
+.badge.bg-primary {
+  background-color: #f6921e !important;
+}
+
+/* Form check styling */
+.form-check-input:checked {
+  background-color: #f6921e;
+  border-color: #f6921e;
+}
+
+/* Links */
+a {
+  color: #f6921e;
+}
+
+a:hover {
+  color: #d87c15;
+}
+
+/* Footer styling */
+.footer-text {
+  font-size: 0.875rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #dee2e6;
+}

@@ -1,0 +1,372 @@
+/* ============================================
+   BASE RESPONSIVE STYLES
+============================================ */
+:root {
+  --primary-color: #0b3f7e;
+  --secondary-color: orange;
+  --text-light: #f5f5f5;
+  --text-dark: #333;
+  --spacing-xs: 8px;
+  --spacing-sm: 16px;
+  --spacing-md: 24px;
+  --spacing-lg: 40px;
+  --spacing-xl: 120px;
+}
+
+/* Navbar styling */
+.navbar {
+  width: 100%;
+  background: var(--primary-color);
+  color: var(--text-light);
+  height: 90px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+/* Container Grid Utama */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--spacing-md); /* gutter */
+  width: 100%;
+  padding: 0 var(--spacing-xl); /* margin kiri kanan */
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+/* Kolom */
+.col {
+  display: flex;
+  align-items: center;
+}
+
+/* Logo: ambil 2 kolom */
+.logo {
+  grid-column: span 2;
+  font-family: "Montserrat";
+  font-size: 24px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Search bar: ambil 8 kolom */
+.search-bar {
+  grid-column: span 8;
+  width: 100%;
+}
+
+/* Searchbar wrapper */
+.search-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* Search input */
+.search-wrapper input {
+  width: 100%;
+  height: 50px;
+  padding-left: 50px; /* memberi ruang icon kiri */
+  border-radius: 6px;
+  border: none;
+  font-size: 18px;
+  color: var(--text-dark);
+  transition: all 0.3s ease;
+  background-color: white;
+}
+
+.search-wrapper input:focus {
+  outline: 2px solid var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(255, 165, 0, 0.1);
+}
+
+/* Tombol Search */
+.search-button {
+  position: absolute;
+  left: 15px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  height: 22px;
+  width: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.search-button svg {
+  width: 22px;
+  height: 22px;
+  transition: 0.3s;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.search-button:hover svg {
+  color: var(--secondary-color);
+}
+
+/* Icons: ambil 2 kolom */
+.actions {
+  grid-column: span 2;
+  display: flex;
+  gap: 35px;
+  justify-content: flex-end;
+}
+
+/* Hover icon */
+.actions svg {
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.actions svg:hover {
+  color: var(--secondary-color);
+}
+
+/* ============================================
+   RESPONSIVE BREAKPOINTS
+============================================ */
+
+/* Tablet Landscape & Small Desktop (992px - 1200px) */
+@media (max-width: 1200px) {
+  .grid-container {
+    padding: 0 80px;
+    gap: 20px;
+  }
+
+  .logo {
+    font-size: 22px;
+  }
+
+  .search-wrapper input {
+    height: 46px;
+    font-size: 16px;
+  }
+
+  .actions {
+    gap: 25px;
+  }
+
+  .navbar {
+    height: 80px;
+  }
+}
+
+/* Tablet Portrait (768px - 992px) */
+@media (max-width: 992px) {
+  .grid-container {
+    padding: 0 40px;
+    gap: 16px;
+  }
+
+  .logo {
+    grid-column: span 3;
+    font-size: 20px;
+  }
+
+  .search-bar {
+    grid-column: span 6;
+  }
+
+  .search-wrapper input {
+    height: 44px;
+    font-size: 15px;
+    padding-left: 45px;
+  }
+
+  .search-button {
+    left: 12px;
+  }
+
+  .actions {
+    grid-column: span 3;
+    gap: 20px;
+  }
+
+  .actions svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .navbar {
+    height: 75px;
+  }
+}
+
+/* Small Tablet & Large Mobile (576px - 768px) */
+@media (max-width: 768px) {
+  .grid-container {
+    padding: 0 24px;
+    gap: 12px;
+  }
+
+  .logo {
+    grid-column: span 2;
+    font-size: 18px;
+  }
+
+  .search-bar {
+    grid-column: span 8;
+  }
+
+  .actions {
+    grid-column: span 2;
+    gap: 15px;
+  }
+
+  .navbar {
+    height: auto;
+    min-height: 70px;
+    padding: 10px 0;
+  }
+
+  .search-wrapper input {
+    height: 42px;
+    font-size: 14px;
+    padding-left: 42px;
+  }
+
+  .search-button {
+    left: 10px;
+  }
+
+  .search-button svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* Mobile (425px - 576px) */
+@media (max-width: 576px) {
+  .grid-container {
+    padding: 0 16px;
+    gap: 10px;
+  }
+
+  .logo {
+    grid-column: span 3;
+    font-size: 16px;
+  }
+
+  .search-bar {
+    grid-column: span 7;
+  }
+
+  .actions {
+    grid-column: span 2;
+    gap: 12px;
+  }
+
+  .search-wrapper input {
+    height: 40px;
+    font-size: 13px;
+    padding-left: 40px;
+  }
+
+  .search-button {
+    left: 8px;
+  }
+
+  .search-button svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .actions svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* Small Mobile (< 425px) */
+@media (max-width: 425px) {
+  .grid-container {
+    padding: 0 12px;
+  }
+
+  .logo {
+    grid-column: span 3;
+    font-size: 15px;
+  }
+
+  .search-bar {
+    grid-column: span 7;
+  }
+
+  .actions {
+    grid-column: span 2;
+    gap: 8px;
+  }
+
+  .search-wrapper input {
+    height: 38px;
+    font-size: 12px;
+    padding-left: 38px;
+  }
+
+  .navbar {
+    min-height: 65px;
+  }
+}
+
+/* Very Small Mobile (< 320px) */
+@media (max-width: 320px) {
+  .grid-container {
+    padding: 0 8px;
+  }
+
+  .logo {
+    grid-column: span 4;
+    font-size: 14px;
+  }
+
+  .search-bar {
+    grid-column: span 6;
+  }
+
+  .actions {
+    grid-column: span 2;
+    gap: 6px;
+  }
+
+  .search-wrapper input {
+    padding-left: 36px;
+    font-size: 11px;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY & TOUCH FRIENDLY
+============================================ */
+@media (hover: none) and (pointer: coarse) {
+  /* Better touch targets for mobile */
+  .actions svg,
+  .search-button {
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Remove hover effects on touch devices */
+  .actions svg:hover,
+  .search-button:hover svg {
+    transform: none;
+    color: inherit;
+  }
+
+  .search-button:hover svg {
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  /* Add active states for touch */
+  .actions svg:active,
+  .search-button:active {
+    transform: scale(0.95);
+  }
+}

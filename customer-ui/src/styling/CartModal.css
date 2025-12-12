@@ -1,0 +1,426 @@
+/* Cart Modal Styles */
+.cart-modal-container {
+  position: relative;
+}
+
+.cart-icon-container {
+  position: relative;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.cart-icon-container:hover {
+  background-color: rgba(50, 90, 137, 0.1);
+}
+
+.cart-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: #ee4d2d;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 600;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  border: 2px solid white;
+}
+
+/* Cart Modal Content */
+.cart-modal-content {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 320px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 1060; /* Lebih tinggi dari user modal */
+  margin-top: 8px;
+  animation: slideDown 0.2s ease;
+}
+
+/* Header */
+.cart-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.cart-title {
+  display: flex;
+  align-items: center;
+  color: #0b3f7e;
+}
+
+.cart-title i {
+  font-size: 1.2rem;
+  color: #325a89;
+}
+
+.cart-title h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.cart-header-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cart-item-count {
+  font-size: 0.85rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.cart-close-btn {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: #6c757d;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.cart-close-btn:hover {
+  background-color: #f8f9fa;
+  color: #0b3f7e;
+}
+
+/* Body */
+.cart-modal-body {
+  padding: 16px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Loading State */
+.cart-loading {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.cart-loading .spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #325a89;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 12px;
+}
+
+.cart-loading p {
+  color: #6c757d;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* Error State */
+.cart-error {
+  text-align: center;
+  padding: 30px 20px;
+}
+
+.cart-error i {
+  font-size: 2.5rem;
+  color: #dc3545;
+  margin-bottom: 12px;
+}
+
+.cart-error p {
+  color: #dc3545;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+}
+
+.btn-retry {
+  background-color: #325a89;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background-color 0.2s;
+}
+
+.btn-retry:hover {
+  background-color: #0b3f7e;
+}
+
+/* Empty State */
+.cart-empty {
+  text-align: center;
+  padding: 30px 20px;
+}
+
+.cart-empty i {
+  font-size: 2.5rem;
+  color: #6c757d;
+  margin-bottom: 12px;
+}
+
+.cart-empty h4 {
+  color: #343a40;
+  font-weight: 500;
+  margin-bottom: 8px;
+  font-size: 1rem;
+}
+
+.cart-empty-message {
+  color: #6c757d;
+  display: block;
+  margin-bottom: 20px;
+  font-size: 0.85rem;
+}
+
+.btn-start-shopping {
+  padding: 10px 16px;
+  background-color: #325a89;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.btn-start-shopping:hover {
+  background-color: #0b3f7e;
+}
+
+/* Cart Items List */
+.cart-items-list {
+  margin-bottom: 16px;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.cart-item:last-child {
+  border-bottom: none;
+}
+
+.cart-item-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.cart-item-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cart-item-info {
+  flex: 1;
+}
+
+.cart-item-name {
+  color: #333;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 4px;
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cart-item-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cart-item-quantity {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.cart-item-subtotal {
+  color: #325a89;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* More Items Indicator */
+.more-items-indicator {
+  text-align: center;
+  padding: 12px;
+  color: #6c757d;
+  font-size: 0.85rem;
+  border-top: 1px solid #f0f0f0;
+  margin-top: 12px;
+}
+
+.more-items-indicator i {
+  margin-right: 4px;
+}
+
+/* Cart Total Summary */
+.cart-total-summary {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e9ecef;
+}
+
+.cart-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.cart-total-row span:first-child {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.cart-total-row span:last-child {
+  color: #325a89;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* Action Buttons */
+.cart-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.btn-view-cart,
+.btn-checkout {
+  padding: 10px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-view-cart {
+  background-color: #f8f9fa;
+  color: #325a89;
+  border: 1px solid #dee2e6;
+}
+
+.btn-view-cart:hover {
+  background-color: #e9ecef;
+}
+
+.btn-checkout {
+  background-color: #f6921e;
+  color: white;
+  position: relative;
+}
+
+.btn-checkout:hover:not(:disabled) {
+  background-color: #492b0a;
+}
+
+.btn-checkout:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.checkout-total {
+  margin-left: auto;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Animations */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .cart-modal-content {
+    position: fixed;
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 70vh;
+    margin-top: 0;
+    border-radius: 16px 16px 0 0;
+    animation: slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+}
+
+/* Modal Manager untuk handle multiple modals */
+.modal-manager {
+  position: relative;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1050;
+}

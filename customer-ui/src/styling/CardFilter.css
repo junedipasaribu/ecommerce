@@ -1,0 +1,658 @@
+/* components/CardFilter.css - Shopee Web Style */
+
+/* Main Containers */
+.card2-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.2rem 1rem 0.2rem;
+  margin-top: 0.2rem;
+}
+
+.cardfilter-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.2rem 1rem 1rem;
+}
+
+/* Categories Section */
+.categories-section {
+  margin-bottom: 0.5rem;
+}
+
+.categories-title {
+  color: #0b3f7e;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.categories-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  padding: 0.1rem 0;
+}
+
+/* Category Buttons - Shopee Style */
+.category-button {
+  padding: 0.25rem 0.6rem;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  color: #555;
+  font-size: 0.7rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.category-button:hover {
+  background: #f8f9fa;
+  border-color: #325a89;
+  color: #325a89;
+}
+
+.category-button.active {
+  background: #325a89;
+  border-color: #325a89;
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 1px 2px rgba(50, 90, 137, 0.2);
+}
+
+/* Products Section */
+.products-section {
+  padding: 0;
+}
+
+.products-header {
+  margin-bottom: 0.6rem;
+}
+
+.products-title {
+  color: #0b3f7e;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.1rem;
+}
+
+.products-subtitle {
+  color: #888;
+  font-size: 0.75rem;
+  margin-bottom: 0.3rem;
+}
+
+.products-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.products-count {
+  color: #888;
+  font-size: 0.7rem;
+  font-weight: 400;
+}
+
+.loading-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: #f6921e;
+  font-size: 0.7rem;
+}
+
+.spinner-small {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border: 1.5px solid rgba(246, 146, 30, 0.3);
+  border-radius: 50%;
+  border-top-color: #f6921e;
+  animation: spin 0.8s linear infinite;
+}
+
+/* Products Grid - Shopee Style (5-6 items per row) */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 items per row seperti Shopee */
+  gap: 0.4rem;
+  margin-bottom: 0.6rem;
+}
+
+/* Product Card - Shopee Style Minimal */
+.product-card {
+  background: white;
+  border-radius: 1px;
+  overflow: hidden;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #f0f0f0;
+  position: relative;
+}
+
+.product-card:hover {
+  border-color: #e0e0e0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transform: translateY(-1px);
+}
+
+/* Product Image Container */
+.product-image-container {
+  position: relative;
+  width: 100%;
+  height: 140px;
+  overflow: hidden;
+  background: #f8f9fa;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+  padding: 0.5rem;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.03);
+}
+
+.product-image-placeholder {
+  width: 100%;
+  height: 100%;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 0.6rem;
+}
+
+/* Product Info - Shopee Style Minimal */
+.product-info {
+  padding: 0.4rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 85px;
+}
+
+.product-name h4 {
+  color: #325a89;
+  font-size: 0.72rem;
+  font-weight: 400;
+  line-height: 1.2;
+  margin-bottom: 0.2rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  height: 1.7em;
+}
+
+.product-description {
+  display: none; /* Shopee biasanya tidak tampilkan deskripsi di card */
+}
+
+/* Product Details */
+.product-details {
+  margin-top: auto;
+}
+
+.product-price-stock {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.3rem;
+}
+
+.product-price {
+  color: #f6921e;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1;
+}
+
+.product-stock {
+  color: #888;
+  font-size: 0.6rem;
+  margin: 0;
+  line-height: 1;
+}
+
+.in-stock {
+  color: #27ae60;
+  font-weight: 500;
+}
+
+.out-stock {
+  color: #e74c3c;
+  font-weight: 500;
+}
+
+/* Detail Button - Shopee Style */
+.detail-item-btn {
+  width: 100%;
+  margin-top: auto;
+  padding: 0.25rem;
+  background: #f6921e;
+  color: white;
+  border: none;
+  border-radius: 0 0 3px 3px;
+  font-size: 0.65rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1;
+  min-height: 24px;
+}
+
+.detail-item-btn:hover {
+  background: #5f380b;
+}
+
+/* Loading State */
+.products-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 1rem;
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 30px;
+  height: 30px;
+  border: 2px solid rgba(50, 90, 137, 0.1);
+  border-radius: 50%;
+  border-top-color: #325a89;
+  animation: spin 1s linear infinite;
+  margin-bottom: 0.8rem;
+}
+
+/* Error State */
+.products-error {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  background: #fff3cd;
+  border-radius: 4px;
+  border: 1px solid #ffeaa7;
+}
+
+.error-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.products-error h4 {
+  color: #856404;
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+}
+
+.error-message {
+  color: #856404;
+  font-size: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.retry-btn {
+  padding: 0.4rem 1rem;
+  background: #f6921e;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.retry-btn:hover {
+  background: #e6820d;
+}
+
+/* Empty State */
+.empty-products {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.empty-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.empty-products h4 {
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+}
+
+.empty-message {
+  color: #6c757d;
+  font-size: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.reset-btn {
+  padding: 0.4rem 1rem;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.reset-btn:hover {
+  background: #5a6268;
+}
+
+/* Load More Section */
+.load-more-section {
+  text-align: center;
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.load-more-btn {
+  padding: 0.4rem 1rem;
+  background: white;
+  color: #325a89;
+  border: 1px solid #325a89;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.load-more-btn:hover:not(:disabled) {
+  background: #325a89;
+  color: white;
+}
+
+.load-more-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Animations */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design - Shopee Style Responsive */
+@media (min-width: 1200px) {
+  .products-grid {
+    grid-template-columns: repeat(5, 1fr); /* 5 kolom */
+  }
+}
+
+@media (max-width: 1199px) and (min-width: 992px) {
+  .products-grid {
+    grid-template-columns: repeat(4, 1fr); /* 4 kolom */
+  }
+
+  .product-image-container {
+    height: 130px;
+  }
+}
+
+@media (max-width: 991px) and (min-width: 768px) {
+  .products-grid {
+    grid-template-columns: repeat(3, 1fr); /* 3 kolom */
+  }
+
+  .product-image-container {
+    height: 120px;
+  }
+
+  .product-info {
+    min-height: 80px;
+  }
+
+  .product-name h4 {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .products-grid {
+    grid-template-columns: repeat(3, 1fr); /* 3 kolom di mobile */
+    gap: 0.3rem;
+  }
+
+  .product-image-container {
+    height: 100px;
+  }
+
+  .product-info {
+    padding: 0.3rem;
+    min-height: 75px;
+  }
+
+  .product-name h4 {
+    font-size: 0.68rem;
+    height: 1.6em;
+  }
+
+  .product-price {
+    font-size: 0.8rem;
+  }
+
+  .product-stock {
+    font-size: 0.58rem;
+  }
+
+  .detail-item-btn {
+    font-size: 0.62rem;
+    padding: 0.2rem;
+    min-height: 22px;
+  }
+
+  .card2-container,
+  .cardfilter-container {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .categories-container {
+    gap: 0.2rem;
+  }
+
+  .category-button {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.65rem;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 575px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 kolom di mobile kecil */
+    gap: 0.3rem;
+  }
+
+  .product-image-container {
+    height: 110px;
+  }
+
+  .product-info {
+    min-height: 70px;
+  }
+
+  .product-name h4 {
+    font-size: 0.66rem;
+    height: 1.5em;
+  }
+
+  .product-price {
+    font-size: 0.75rem;
+  }
+
+  .product-stock {
+    font-size: 0.55rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.25rem;
+  }
+
+  .product-image-container {
+    height: 95px;
+  }
+
+  .product-info {
+    padding: 0.25rem;
+    min-height: 65px;
+  }
+
+  .product-name h4 {
+    font-size: 0.64rem;
+  }
+
+  .product-price {
+    font-size: 0.7rem;
+  }
+}
+
+/* Pagination Controls - Shopee Style */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+}
+
+.page-button {
+  padding: 0.25rem 0.6rem;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 3px;
+  color: #555;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.page-button:hover:not(:disabled) {
+  background: #f8f9fa;
+  border-color: #325a89;
+  color: #325a89;
+}
+
+.page-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.page-button.active {
+  background: #325a89;
+  border-color: #325a89;
+  color: white;
+  font-weight: 500;
+}
+
+.page-info {
+  color: #888;
+  font-size: 0.7rem;
+  min-width: 70px;
+  text-align: center;
+}
+
+/* Shopee Style Badge (Optional) */
+.discount-badge {
+  position: absolute;
+  top: 0.2rem;
+  left: 0.2rem;
+  background: #ee4d2d;
+  color: white;
+  padding: 0.1rem 0.3rem;
+  font-size: 0.55rem;
+  font-weight: 500;
+  border-radius: 2px;
+  z-index: 1;
+}
+
+/* Rating Stars (Optional Shopee Feature) */
+.product-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+  margin-bottom: 0.2rem;
+}
+
+.rating-stars {
+  color: #ffce00;
+  font-size: 0.6rem;
+}
+
+.rating-count {
+  color: #888;
+  font-size: 0.55rem;
+  margin-left: 0.2rem;
+}
+
+/* Sold Count (Shopee Style) */
+.sold-count {
+  color: #888;
+  font-size: 0.6rem;
+  margin-top: 0.1rem;
+}
+
+/* Untuk memaksakan 2 baris di homepage */
+.homepage-limit .products-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(2, auto);
+  gap: 0.4rem;
+  max-height: calc(2 * 230px);
+  overflow: hidden;
+}
+
+/* Free Shipping Badge (Shopee Style) */
+.free-shipping {
+  background: #27ae60;
+  color: white;
+  padding: 0.1rem 0.3rem;
+  font-size: 0.55rem;
+  border-radius: 2px;
+  display: inline-block;
+  margin-left: 0.3rem;
+}
